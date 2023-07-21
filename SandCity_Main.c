@@ -6,10 +6,6 @@
 #include <math.h>
 #include "ngin64/nGin64.h"
 
-#include "cube.h"
-#include "sphere.h"
-#include "plane.h"
-#include "prim_test.h"
 
 
 /* ----- To Do Notes for Sand City -----

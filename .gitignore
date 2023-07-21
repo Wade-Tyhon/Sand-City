@@ -1,1 +1,9 @@
 filesystem/
+**/build
+*.o
+*.d
+*.map
+*.sym
+*.msym
+*.dfs
+*.elf
