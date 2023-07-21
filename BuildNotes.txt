@@ -1,0 +1,21 @@
+Tips: 
+
+
+To begin, search for WSL and open it
+After opening WSL, it should start you in the root folder (in my case wadetyhon)
+Navigate to your folder 
+
+
+Quick Commands:
+
+"cd ~" to go to root
+"cd /*" *insert directory name here to navigate to your project's location 
+"ls" to list the contents of the current directory
+"make clean" to rebuild the entire project
+"make" to only rebuild files that have recently changed in the project
+
+
+For Updating Libdragon:
+
+"./build.sh" to rebuild in the libdragon folder
+
