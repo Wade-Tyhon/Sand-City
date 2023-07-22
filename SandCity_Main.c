@@ -12,7 +12,16 @@
 
 /* ----- To Do Notes for Sand City -----
 *
-*
+*   07262023
+*   - Refine the outer rim of the playfield to reduce the number of polygons needed and import new mesh
+*       - NOTE - this has been exported and is commented out in SC_Playfield_Small.c. 
+        - It will require adjusting the vertices referenced in ' int editableBlocks[16][7][4] '
+
+*   - Set up a simple text based UI for current object selection (small tower, large tower, watch tower, etc) 
+*   
+*   - Create a set UI element for placement of extra sand
+*   - Have "Ditches" fill with water
+*   - Fix the tri counter which is not properly re-setting for each model type
 *
 */
 
