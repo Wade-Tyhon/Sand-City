@@ -117,6 +117,11 @@ double inputTimer = 0.0;
 
 bool directionHold = false;
 
+
+int itemToPlace = 0; //----- Note ----- Temporary variable for selecting which item to place... 0 for smallTower, 1 for watchTower, 2 for tallTower
+
+
+
 void SC_Playfield_Control_Update() {
 
     #ifdef DEBUG_NGIN64_INTERFACE
@@ -124,6 +129,29 @@ void SC_Playfield_Control_Update() {
 	    fprintf(stderr, "\n > RUN SC_Playfield_Control_Update!\n");
     #endif
         
+
+
+        //----- Note ----- This is a temporary solution for selecting an item to place.... 
+        if (g64_Pad[0].Press.C_Right == 1) {
+            if ((itemToPlace + 1) <= 2)
+                itemToPlace += 1;
+            else
+                itemToPlace = 0;
+        }
+
+        else if (g64_Pad[0].Press.C_Left == 1) {
+            if ((itemToPlace - 1) >= 0)
+                itemToPlace -= 1;
+            else
+                itemToPlace = 2;
+        }
+
+
+
+
+
+
+
 
         if(directionHold == false){
 
@@ -257,7 +285,23 @@ void SC_Playfield_Control_Update() {
 
         if (g64_Pad[0].Press.L == 1) {
             S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
-            S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_SimpleTower_PF;
+
+
+
+            switch (itemToPlace) {
+
+                case 0:
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_SimpleTower_PF;
+                    break;
+                case 1:
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_WatchTower_PF;
+                    break;
+                case 2:
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_LargeTower_PF;
+                    break;
+            }
+
+            //S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_SimpleTower_PF;
             S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.obj.pos = SCGet_Playfield_Tile_Position(playfieldCursor.column, playfieldCursor.row);
         }
 
@@ -291,7 +335,7 @@ void SC_Playfield_Control_Update() {
 bool assigned = false;
 
 void SC_Playfield_Control_Draw() {
-
+    /*
     if (assigned == false){
         S_PlayfieldState_Pending[8][4].updating = true;
         S_PlayfieldState_Pending[8][4].structure = SC_SimpleTower_PF;
@@ -299,11 +343,12 @@ void SC_Playfield_Control_Draw() {
 
 
         S_PlayfieldState_Pending[6][4].updating = true;
-        S_PlayfieldState_Pending[6][4].structure = SC_TallTower_PF;
+        S_PlayfieldState_Pending[6][4].structure = SC_LargeTower_PF;
         S_PlayfieldState_Pending[6][4].structure.obj.pos = SCGet_Playfield_Tile_Position(6, 4);
 
         assigned = true;
     }
+    */
 
     glPushMatrix();
 
