@@ -247,7 +247,8 @@ void g64_InitDebug() {
     rdpq_init();
     rdpq_debug_start();
 
-    debugFont = rdpq_font_load("rom:/Pacifico.font64");
+    //debugFont = rdpq_font_load("rom:/Pacifico.font64");
+    debugFont = rdpq_font_load("rom:/BRLNSDB.font64");
 }
 
 extern surface_t* disp;
@@ -262,19 +263,32 @@ void gin64_ResetTriCounter() {
     g64_TriCounter = 0;
 }
 
+
+extern int itemToPlace;
+
 void g64_UpdateDebug() {
 
     rdpq_font_begin(RGBA32(58, 138, 127, 255));
     rdpq_font_position(20, 50);
 
-    sprintf(debugStringA, "%i", (int)gFPS);
+    sprintf(debugStringA, "FPS %i", (int)gFPS);
     
 
     rdpq_font_print(debugFont, debugStringA);
 
 
-    rdpq_font_position(40, 50);
-    sprintf(debugStringB, "%i", g64_TriCounter);
+    rdpq_font_position(20, 80);
+    sprintf(debugStringB, "Tri %i", g64_TriCounter);
+    rdpq_font_print(debugFont, debugStringB);
+
+    rdpq_font_position(220, 50);
+    if(itemToPlace == 0)
+        sprintf(debugStringB, "Small Castle");
+    else if (itemToPlace == 1)
+        sprintf(debugStringB, "Watch Tower");
+    else if (itemToPlace == 2)
+        sprintf(debugStringB, "Large Castle");
+
     rdpq_font_print(debugFont, debugStringB);
 
 

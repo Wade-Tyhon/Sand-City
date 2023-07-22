@@ -130,16 +130,17 @@ void gin64_CamInit() {
     //-----TO DO NOTE -----
     //Set up camera movement script
 
-    tempCameraOffset.y = -175.0f;
+    //tempCameraOffset.y = -180.0f;
 
     //----- Note ----- Projection:
-    tempCameraOffset.z = 250.0f;
+    //tempCameraOffset.z = 260.0f;
 
     //----- Note ----- Ortho:
     //tempCameraOffset.z = 600.0f;
 
-
-    mainCamera.cameraOffset = tempCameraOffset;
+    //tempCameraOffset.y = -180.0f;
+    //tempCameraOffset.z = 260.0f;
+    //mainCamera.cameraOffset = tempCameraOffset;
 
 
 
@@ -164,13 +165,19 @@ void gin64_CamView(float cam_dist, float cam_rot) {
                         defines a unique orientation for the camera.
     */
  
-    float adjustScale = 0.03f;
+    float adjustScale = 1.0f;
     
     gluLookAt(
         (mainCamera.obj.pos.x + .01f) * adjustScale, (mainCamera.obj.pos.y+.01f)* adjustScale, (mainCamera.obj.pos.z+.01f)* adjustScale,
-        0, 0, 0,
+        //playfieldCursor.pos.x, playfieldCursor.pos.y + 7.0f, 0,
+        mainCamera.obj.pos.x, mainCamera.obj.pos.y + 10.0f, -5.0f,
         0, 0, 1);
-        
+    /*
+    gluLookAt(
+        (mainCamera.obj.pos.x + .01f) * adjustScale, (mainCamera.obj.pos.y + .01f) * adjustScale, (mainCamera.obj.pos.z + .01f) * adjustScale,
+        playfieldCursor.pos.x, playfieldCursor.pos.y, playfieldCursor.pos.z + 10.0f,
+        0, 0, 1);
+        */
 }
 
 
@@ -298,7 +305,177 @@ void ngin64_CameraControl_C() {
 /*-------------------Calculate Camera Position and Orbit--------------------*/
 /*--------------------------------------------------------------------------*/
 u8 cameraInitalPosed = 0;
+
+
 void ngin64_UpdateCameraPosition()
+{
+
+
+    /*------------------------Calculate Rotating Camera-------------------------*/
+    //GameObject* lookObject = mainCamera.camLook;
+
+
+    /*-----NOTE----- Temporarily removing smoothing until the player avatar has been set up.*/
+    float smoothLookX;
+    float smoothLookY;
+    float smoothLookZ;
+
+    float jumpingLookZ;
+    //  float testnumber;
+
+
+
+
+    //* 
+    //* 
+  // ----- NOTE ----- Adjust the camera smoothing speed based on the player movement speed so that it is not possible to run out of view
+    /*
+    if (playerAvatar.rigidBody.speed >= 400)
+        cameraSmoothSpeed = 10;
+
+    if (playerAvatar.rigidBody.speed >= 300)
+        cameraSmoothSpeed = 8;
+
+    else if (playerAvatar.rigidBody.speed >= 250)
+        cameraSmoothSpeed = 5;
+
+    else if (playerAvatar.rigidBody.speed < 250)
+        cameraSmoothSpeed = 4;
+*/
+
+    cameraSmoothSpeed = 10;
+
+    smoothLookX = lerp(mainCamera.camLookPoint.x, playfieldCursor.pos.x + 0.5f, gin64_GetDeltaTime() * (cameraSmoothSpeed * 0.2f));
+    //smoothLookY = lerp(mainCamera.camLookPoint.y, playfieldCursor.pos.y - 10.0f, gin64_GetDeltaTime() * (cameraSmoothSpeed * 0.5f));
+    smoothLookY = lerp(mainCamera.camLookPoint.y, ((playfieldCursor.pos.y * 0.35f) - 5.0f), gin64_GetDeltaTime() * (cameraSmoothSpeed * 0.5f));
+    smoothLookZ = lerp(mainCamera.camLookPoint.z, playfieldCursor.pos.z - 8.0f, gin64_GetDeltaTime() * (cameraSmoothSpeed * 0.15f));
+    SetVector3(&mainCamera.camLookPoint, smoothLookX, smoothLookY, smoothLookZ); //Note: distance to offset from "camLook"
+
+
+
+    tempCameraOffset.z = 300.0f;
+    //tempCameraOffset = mainCamera.cameraOffset;
+
+    //ngin64_CameraControl_C();
+
+    /*-------------------------Depth/Horizontal Distance------------------------*/
+    //if (userInput_Y >= 1.0f || userInput_Y <= -1.0f || cameraInitalPosed == 1)
+    //{
+
+    if (camIsAgainstWall == 0)
+    {
+        if (distance >= 600)
+            nearPosition = 450;
+
+
+        else if (distance <= 600 && distance >= 500)
+            nearPosition = 400;
+
+        else if (distance < 500)
+
+            nearPosition = 50;
+
+    }
+
+    else
+    {
+        if (adjDistance >= 600)
+            nearPosition = 450;
+        else if (adjDistance <= 600 && adjDistance >= 500)
+            nearPosition = 400;
+        else if (adjDistance < 500)
+
+            nearPosition = 50;
+
+
+    }
+
+    //tempCameraOffset
+    //}
+
+    //NOTE ----- put camera static check to run only when camera input has stopped
+
+    /*END-------------------------Depth/Horizontal Distance------------------------*/
+    cameraStatic = 0; // reset before calculating again
+
+
+    //if (userInput_Y < 0.01f && userInput_Y > -0.01f && userInput_X < 0.01f && userInput_X > -0.01f) {
+        cameraStatic = positionCompare(mainCamera.obj.pos, camUpdatedPosition, 0.01f); //vector 1, vector 2, comparison precision
+        //Take a break! You've earned it. The camera is 
+    //}
+
+    if (cameraStatic == false)
+    {
+#ifdef DEBUG_NGIN64_SYSTEMFUNC
+        fprintf(stderr, "Updating Camera position!");
+#endif
+
+        camUpdatedPosition = RotateCameraAround(vectorAdd_R(mainCamera.camLookPoint, tempCameraOffset), mainCamera.camLookPoint, tempCameraOrbit);
+
+        mainCamera.cameraOrbit = tempCameraOrbit;
+        mainCamera.audioOrbit = tempAudioOrbit;
+        mainCamera.cameraOffset = tempCameraOffset;
+
+        //lerp the canera quickly into position to soften sudden changes and jitters
+        if (cameraInitalPosed == 1)
+        {
+            cameraSmoothSpeed = 8;
+            mainCamera.obj.pos.x = lerp(mainCamera.obj.pos.x, camUpdatedPosition.x, gin64_GetDeltaTime() * cameraSmoothSpeed);
+            mainCamera.obj.pos.y = lerp(mainCamera.obj.pos.y, camUpdatedPosition.y, gin64_GetDeltaTime() * cameraSmoothSpeed);
+            mainCamera.obj.pos.z = lerp(mainCamera.obj.pos.z, 21.1f, gin64_GetDeltaTime() * (cameraSmoothSpeed * 0.5f));
+        }
+        else
+        {
+            mainCamera.obj.pos = mainCamera.obj.pos;
+            //mainCamera.obj.pos.x = 10.0f;
+            //mainCamera.obj.pos.y = 10.0f;
+            //mainCamera.obj.pos.z = 20.0f;
+            cameraInitalPosed = 1;
+        }
+
+    }
+
+
+#ifdef DEBUG_NGIN64_CAMERA
+    fprintf(stderr, "CamInput: %.6f CamStatic: %i TempOrbit: (%.4f) Position: (%.4f,%.4f,%.4f)]\n\n", userInput_X, cameraStatic, tempCameraOrbit, mainCamera.obj.pos.x, mainCamera.obj.pos.y, mainCamera.obj.pos.z);
+    fprintf(stderr, "CamLookPoint: (%.4f,%.4f,%.4f)]\n\n", mainCamera.camLookPoint.x, mainCamera.camLookPoint.y, mainCamera.camLookPoint.z);
+
+    
+#endif
+    // testnumber  = mainCamera.camLookPoint.x + playerAvatar.obj.pos.x+0.5f;
+    // Debug_MiscVar[0].x = testnumber;
+
+//}
+    /*
+else if (playerAvatar.state.movement == 5)
+{
+
+    smoothLookX = lerp(mainCamera.camLookPoint.x, playerAvatar.obj.pos.x + 0.5f, gin64_GetDeltaTime() * (cameraSmoothSpeed * 0.9f));
+    smoothLookY = lerp(mainCamera.camLookPoint.y, playerAvatar.obj.pos.y + 0.5f, gin64_GetDeltaTime() * (cameraSmoothSpeed * 0.9f));
+    smoothLookZ = lerp(mainCamera.camLookPoint.z, playerAvatar.obj.pos.z + 5.0f, gin64_GetDeltaTime() * (cameraSmoothSpeed * 0.75f));
+
+
+    // Debug_MiscVar[0].y = basePosition.y - centerPoint.y;
+     //Debug_MiscVar[0].z = rotation;
+
+
+
+    SetVector3(&mainCamera.camLookPoint, smoothLookX, smoothLookY, smoothLookZ); //Note: distance to offset from "camLook"
+
+    mainCamera.obj.pos.x = -2185;
+    mainCamera.obj.pos.y = -2907;
+    mainCamera.obj.pos.z = 315;
+}
+*/
+
+
+}
+
+
+
+
+
+void ngin64_UpdateCameraPosition_STATIC()
 {
     
     

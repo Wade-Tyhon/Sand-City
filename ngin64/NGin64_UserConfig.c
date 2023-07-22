@@ -45,8 +45,8 @@ CameraObject mainCamera =
 {
     {{0,-10,100}, {0,0,0}, {1,1,1}},//mainCamera.obj ( {pos}, {rot}, {scl})
     NULL, //mainCamera.camLook
-    {0,0,400}, //mainCamera.camLookPoint
-    {0,45,600}, //mainCamera.cameraOffset
+    {0,0,0}, //mainCamera.camLookPoint
+    {0,-6,6}, //mainCamera.cameraOffset
     {0,0,0}, //mainCamera.camLookPoint
     0.0f, //mainCamera.cameraOrbit
     0.0f, //mainCamera.audioOrbit
