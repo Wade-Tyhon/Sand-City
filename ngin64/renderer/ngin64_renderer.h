@@ -3,6 +3,12 @@
 
 extern surface_t zbuffer;
 
+
+extern Vector3 GetCameraPosition();
+
+extern u8 wideScreen;
+
+
 extern void gin64_ProjSetup(); //Visual settings, only run when changes need to be made
 extern void gin64_BeginFrame();
 extern void gin64_EndFrame();
@@ -17,5 +23,5 @@ extern u8 wideScreen;
 
 extern void gin64_LightingUpdate();
 
-
+extern void gin64_RenderEnvironmentObj(g64_EnvObjectPrefab* instance, int LODStepDist);
 #endif

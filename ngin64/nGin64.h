@@ -15,6 +15,10 @@
 #include "structures/ngin64_ObjTypes.h"
 #include "structures/ngin64_InputTypes.h"
 
+#include "events/ngin64_EventTypes.h"
+
+#include "gui/ngin64_GUI_Types.h"
+
 #include "tools/ngin64_Tools.h"
 
 //#include "renderer/ngin64_rendererDataTypes.h"
@@ -48,12 +52,24 @@ extern g64_GameplayInput gameInput;
 extern CameraObject mainCamera;
 extern ViewSettings viewSettings;
 
-extern void g64_fps();
-extern float g64_GetFPS();
+extern g64_GameTimer gin64_GetGameTime();
+extern g64_GameTimer gin64_AddGameTimers(g64_GameTimer timeA, g64_GameTimer timeB);
+extern g64_GameTimer gin64_CompareGameTimers(g64_GameTimer timeA, g64_GameTimer timeB);
+extern g64_GameTimer gin64_SetGameTimer(u8 hours, u8 minutes, float seconds);
+
+extern void gin64_Time();
+extern void gin64_fps();
+extern float gin64_GetFPS();
 
 extern int g64_TriCounter;
 extern void gin64_ResetTriCounter();
 extern void gin64_UpdateTriCounter(int newTri);
+
+
+/*---------------------------GUI Element References------------------------------*/
+
+extern void gin64_GUI_Button_Init();
+
 
 //----- Note -----  For animations and physics checks, get a frame rate tick for various playback rates
 //                  15, 20, 30, 40, 60 are the standard rates
@@ -63,6 +79,7 @@ int gin64_GetPlaybackTick(int playbackRate);
 /*------------------------------ Game Project Custom User Structures ---------------------------------*/
 
 extern playfieldState S_PlayfieldState_Current[16][7];
+extern CursorObject playfieldCursor;
 
 //extern void clearFrame(float cam_dist, float cam_rot);
 //extern void camView(float cam_dist, float cam_rot);

@@ -57,6 +57,8 @@ extern void draw_beach();
 extern void draw_waves();
 extern void draw_castle_watchtower();
 
+extern void SC_Crab_DL_LOD0();
+
 //----- Prefab Names -----
 void SC_Prefabs_DrawCastles();
 
@@ -71,6 +73,8 @@ void update_beach_scene() {
     s_playfield_check();
 
 }
+
+extern GLuint playfield;
 
 void render_beach_scene() {
 
@@ -90,18 +94,25 @@ void render_beach_scene() {
 
     glPushMatrix();
         draw_beach_playfield();
+    
+        glCallList(playfield);
     glPopMatrix();
 
     glPushMatrix();
         SC_Prefabs_DrawCastles();
     glPopMatrix();
 
+
+    glPushMatrix();
+    glTranslatef(0, 0, 7);
+    //SC_Crab_DL_LOD0();
+    glPopMatrix();
+
     glPushMatrix();
     glTranslatef(0, 0, 0);
     draw_waves();
     glPopMatrix();
-
-
+    
     //glPushMatrix();
    // glTranslatef(-15, 17, 10);
    // draw_beach_umbrella();

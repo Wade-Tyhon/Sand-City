@@ -23,6 +23,7 @@ extern GLuint textures[];
 extern u8 textureTotal;
 
 bool updateTopology = false;
+bool recalcTopology = false;
 
 const u8 pos_LOW = 4;
 const u8 pos_MID = 6;
@@ -64,27 +65,8 @@ int editableBlocks[16][7][4] = {
 
 };
 
-
 u8 columnCounter = 0;
 u8 tileCounter = 0;
-
-
-/*
-typedef struct {
-    //For use with collision tests
-    //u8 blockState[16][7][4]; //[Columns][Rows][update, groundHeight, structure, event]
-    bool updating;
-    u8 groundHeight; //Position of playfield: standard, raised, lowered
-    u8 water; // no water, high water, mid water, low water, 
-    u8 strutureType; //House unit, tower, wall, lighthouse, etc
-    u8 eventType; //0 by default (no event), other events could be: "new resident" "received power" "upgrading to new structure" "damaged by waves" etc
-    u8 status; //New, damaged, deteriorating, destroyed
-    bool power; //Is power available in this structure (if applicable)
-    u8 residents; //Number of animal residents in this structure (if applicable)
-
-}playfieldState;
-*/
-
 
 u8 updatePlayfield = 0;
 
@@ -121,42 +103,13 @@ void s_playfield_init() {
             //S_PlayfieldState_Pending[column][row].residents = NULL;
         }
 
-
-    //S_PlayfieldState_Pending[12][7].structure = &
-    //S_PlayfieldState_Pending[12][7].updating = true;
-    //S_PlayfieldState_Pending[12][7].groundHeight = pos_HIGH;
-    /*
-    S_PlayfieldState_Pending[12][6].updating = true;
-    S_PlayfieldState_Pending[12][6].groundHeight = pos_HIGH;
-    S_PlayfieldState_Pending[12][5].updating = true;
-    S_PlayfieldState_Pending[12][5].groundHeight = pos_LOW;
-    S_PlayfieldState_Pending[12][4].updating = true;
-    S_PlayfieldState_Pending[12][4].groundHeight = pos_LOW;
-    S_PlayfieldState_Pending[12][3].updating = true;
-    S_PlayfieldState_Pending[12][3].groundHeight = pos_LOW;
-    S_PlayfieldState_Pending[12][2].updating = true;
-    S_PlayfieldState_Pending[12][2].groundHeight = pos_LOW;
-    S_PlayfieldState_Pending[12][1].updating = true;
-    S_PlayfieldState_Pending[12][1].groundHeight = pos_LOW;
-    S_PlayfieldState_Pending[12][0].updating = true;
-    S_PlayfieldState_Pending[12][0].groundHeight = pos_LOW;
-    */
-
 #ifdef DEBUG_NGIN64_INITFUNC
     fprintf(stderr, "\nInitiate Playfield\n\n");    
 #endif
 
-    //fprintf(stderr, "\nInitiate Playfield\n\n");
-    
+    recalcTopology = true;
 
-
-    //S_PlayfieldState = S_PlayfieldState_Pending;
 }
-
-
-
-
-
 
 void s_playfield_update(int column, int row) {
 
@@ -169,21 +122,7 @@ void s_playfield_update(int column, int row) {
     fprintf(stderr, "\nUpdating Current [%i] to be Pending [%i]\n\n", S_PlayfieldState_Current[column][row].groundHeight, S_PlayfieldState_Pending[column][row].groundHeight);
 #endif
 
-    //if (S_PlayfieldState_Current[column][row].groundHeight != S_PlayfieldState_Pending[column][row].groundHeight)
-    //{
         S_PlayfieldState_Current[column][row].groundHeight = S_PlayfieldState_Pending[column][row].groundHeight;
-
-        /*
-        u8 pos_LOW = 4;
-        u8 pos_MID = 6;
-        u8 pos_HIGH = 8;
-
-        u8 next_position = 8;
-
-        u8 vColor_LOW[4] = { 175, 140, 150, 255 };
-        u8 vColor_MID[4] = { 211, 207, 207, 255 };
-        u8 vColor_HIGH[4] = { 255, 255, 255, 255 };
-        */
 
         for (int i = 0; i < 4; i++) {
             vert_BeachPlayfield[editableBlocks[column][row][i]].pos[2] = S_PlayfieldState_Pending[column][row].groundHeight;
@@ -212,6 +151,7 @@ void s_playfield_update(int column, int row) {
     if (S_PlayfieldState_Current[column][row].groundHeight == S_PlayfieldState_Pending[column][row].groundHeight)
     {
         S_PlayfieldState_Pending[column][row].updating = false;
+        recalcTopology = true;
     }
 
     S_PlayfieldState_Current[column][row].structure = S_PlayfieldState_Pending[column][row].structure;
@@ -247,52 +187,11 @@ void s_playfield_check() {
 
 
 
-
-
-
-void beachSandDemo()
-{
-    if (tileCounter < 4) {
-        tileCounter += 1;
-    }
-
-    else if (updateRow < 6) {
-        updateRow++;
-        tileCounter = 0;
-        updateTopology = true;
-    }
-
-    else if (updateColumn < 15) {
-
-        updateColumn++;
-        updateRow = 0;
-
-        tileCounter = 0;
-        updateTopology = true;
-    }
-
-    else {
-
-        if (next_position == pos_HIGH) {
-            next_vColor[0] = vColor_LOW[0];
-            next_vColor[1] = vColor_LOW[1];
-            next_vColor[2] = vColor_LOW[2];
-            next_position = pos_LOW;
-            updateRow = 0;
-            updateColumn = 0;
-            tileCounter = 0;
-
-        }
-
-    }
-
-}
-
-
 uint16_t playfieldSize = 0;
 
 
 bool fireOnce = 0;
+GLuint playfield;
 
 void draw_beach_playfield()
 {
@@ -301,58 +200,40 @@ void draw_beach_playfield()
         playfieldSize = get_BeachPlayfield_Size();
     }
 
-    //----- Note ---- automatic demo to show the different levels sand can be placed at
-    //beachSandDemo();
 
-    if (updateTopology == true) {
-        //for (int i = 0; i < 4; i++) {
+    if (recalcTopology) {
+
+        playfield = glGenLists(1);
+        glNewList(playfield, GL_COMPILE);
+
+        glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glEnableClientState(GL_NORMAL_ARRAY);
+        glEnableClientState(GL_COLOR_ARRAY);
+
+        glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_BeachPlayfield));
+        glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_BeachPlayfield));
+        glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_BeachPlayfield));
+        glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_BeachPlayfield));
+
+        glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
+        glDrawElements(GL_TRIANGLES, playfieldSize / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_BeachPlayfield_Beach);
 
 
-        S_PlayfieldState_Pending[12][5].updating = true;
-        S_PlayfieldState_Pending[12][5].groundHeight = pos_LOW;
+        glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glDisableClientState(GL_NORMAL_ARRAY);
+        glDisableClientState(GL_COLOR_ARRAY);
 
-        updateTopology = false;
-
-#ifdef DEBUG_NGIN64_INITFUNC
-        fprintf(stderr, "\nUpdate S_PlayfieldState_Pending[12][5]\n\n");
-#endif
-
+        glEndList();
+    
+        recalcTopology = false;
     }
-
-
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-
-    glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_BeachPlayfield));
-    glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_BeachPlayfield));
-    glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_BeachPlayfield));
-    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_BeachPlayfield));
-
-    glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
-    glDrawElements(GL_TRIANGLES, playfieldSize / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_BeachPlayfield_Beach);
-
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-
-
 
     gin64_UpdateTriCounter(320);
-    /*
-    if (fireOnce == 0) {
-
-        updateTopology = true;
-        fireOnce = 1;
-    }
-    */
-
 
 }
+
 
 
 Vector3 SCGet_Playfield_Tile_Position(int column, int row)
@@ -368,11 +249,9 @@ bool SC_Set_PlayfieldTile(int column, int row, char update[12])
     //char dig[12] = 'Dig';
 
     u8 currentHeight = S_PlayfieldState_Pending[column][row].groundHeight;
-    //strcmp(aString, bString
-        //update[] == 'Dig'
-        if (strcmp(update, "Dig") == 0) {
 
-        //pos_LOW
+    if (strcmp(update, "Dig") == 0) {
+
         switch (currentHeight) {
 
             case pos_HIGH:
@@ -387,17 +266,11 @@ bool SC_Set_PlayfieldTile(int column, int row, char update[12])
                 S_PlayfieldState_Pending[column][row].updating = false;
                 return false;
         }
-        //S_PlayfieldState_Pending[12][6].updating = true;
-       // S_PlayfieldState_Pending[column][row].groundHeight = pos_LOW;
 
         return false;
     }
 
-    if (strcmp(update, "Fill") == 0) {
-
-        //pos_LOW
-
-        
+    else if (strcmp(update, "Fill") == 0) {
 
         switch (currentHeight) {
 
@@ -413,8 +286,6 @@ bool SC_Set_PlayfieldTile(int column, int row, char update[12])
                 S_PlayfieldState_Pending[column][row].updating = false;
                 return false;
         }
-        //S_PlayfieldState_Pending[12][6].updating = true;
-       // S_PlayfieldState_Pending[column][row].groundHeight = pos_LOW;
 
         return false;
 

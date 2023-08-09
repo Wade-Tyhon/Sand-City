@@ -61,10 +61,7 @@ void gin64_ProjSetup() {
     
 }
 
-
-
 surface_t* disp;
-
 
 /*------------------------------NGin64 Frame Update Defaults---------------------------------*/
 void gin64_BeginFrame() {
@@ -74,10 +71,8 @@ void gin64_BeginFrame() {
     surface_t* disp = display_get();
     rdpq_attach(disp, &zbuffer);
 
-
-
-    g64_fps(); //calculate current frame rate
-    fps = g64_GetFPS(); //get current frame rate
+    gin64_fps(); //calculate current frame rate
+    fps = gin64_GetFPS(); //get current frame rate
 
 #ifdef DEBUG_NGIN64_CAMERA
     fprintf(stderr, " -FPS: %i   ", (int)fps);

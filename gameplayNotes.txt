@@ -1,0 +1,25 @@
+Sand City Notes
+
+
+08052023
+
+- begin with 'void SC_BuildingEvent_Update() ' inside of 'SC_Playfield_Events'
+
+	- Update the starting number shells and sand material reserves in player.mat_shells and player.mat_sand
+
+	- Continue fleshing out the playfield events script
+		- If player presses 'A' button, try to place a building
+       			- If a building is there, it will ask if you want to repair or upgrade building
+        		- Ask player to confirm yes / no
+
+    		- If player presses 'B' button, try to demolish a building
+        		- If a building is there, ask if you want to demolish building
+			- Ask player to confirm yes / no
+
+	- If player presses 'C_Up' button:
+		- zoom in to currently selected building
+		- load in the higher quality model 
+		- display stats of the building (residents, yearly tax revenue, mood of occupants, etc) 
+
+	//If player presses 'Start' button, zoom out to show the complete map and display current stats of your city
+

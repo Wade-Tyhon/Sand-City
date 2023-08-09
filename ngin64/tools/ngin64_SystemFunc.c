@@ -209,11 +209,156 @@ float inverseDeltaTime;
 
 float gFPS;
 
-void g64_fps() {
+short g64_seconds;
+
+static unsigned int curFrameTimeIndex = 0;
+
+static unsigned int frameTimes[30];
+
+float microseconds; 
+//u8 g64_GameTime[] = {0,0,0};
+
+/*
+typedef struct {
+    u8 hours;
+    u8 minutes; 
+    float seconds;
+
+}g64_GameTimer;
+*/
+g64_GameTimer g64_GameTime;
+
+/*
+u8 gin64_GetSeconds() {
+
+    return g64_GameTime[2];
+}
+
+u8 gin64_GetMinutes() {
+
+    return g64_GameTime[1];
+}
+
+u8 gin64_GetHour() {
+
+    return g64_GameTime[0];
+}
+*/
+
+
+g64_GameTimer gin64_CompareGameTimers(g64_GameTimer timeA, g64_GameTimer timeB) {
+    //Note - Return the value with the highest time
+    /*
+    g64_GameTimer compareTime = { timeA.hours - timeB.hours, timeA.minutes - timeB.minutes, timeA.seconds - timeB.seconds };
+
+    if (compareTime.hours < 0 || compareTime.minutes < 0 || compareTime.seconds < 0)
+        return timeA;
+
+    else
+        return timeB;
+        */
+    return timeA;
+}
+
+g64_GameTimer gin64_AddGameTimers(g64_GameTimer timeA, g64_GameTimer timeB) {
+
+    //Note - Return the combined value of the two lengths of time 
+    g64_GameTimer combineTime = { timeA.hours + timeB.hours, timeA.minutes + timeB.minutes, timeA.seconds + timeB.seconds };
+
+    while (combineTime.seconds >= 60) {
+        combineTime.seconds -= 60;
+        combineTime.minutes += 1;
+    }
+
+    while (combineTime.minutes >= 60) {
+        combineTime.minutes -= 60;
+        combineTime.hours += 1;
+    }
+
+    return combineTime;
+}
+
+
+g64_GameTimer gin64_SetGameTimer(u8 hours, u8 minutes, float seconds) {
+
+    //Note - Return the combined value of the two lengths of time 
+    g64_GameTimer newTime = { hours, minutes, seconds};
+
+    while (newTime.seconds >= 60) {
+        newTime.seconds -= 60;
+        newTime.minutes += 1;
+    }
+
+    while (newTime.minutes >= 60) {
+        newTime.minutes -= 60;
+        newTime.hours += 1;
+    }
+
+    return newTime;
+}
+
+g64_GameTimer gin64_GetGameTime() {
+
+    return g64_GameTime;
+}
+
+float gin64_GetFPS() {
+
+    return gFPS;
+}
+
+
+void gin64_Time() {
+    //----- Note -----  Complete this function for use with timed events like 'gin64_TimeEvent_Set()' 
+    //                  which will be used in the event manager
+    // 
+    // 
+    unsigned int newTime = timer_ticks();
+    unsigned int  oldTime = frameTimes[curFrameTimeIndex];
+    //g64_seconds = (1000000.0f) / TIMER_MICROS(newTime - oldTime);
+    //g64_GameTime[2] += (1000000.0f) / TIMER_MICROS(newTime - oldTime);
+    
+    g64_GameTime.seconds += deltatime;
+
+    if (g64_GameTime.seconds >= 60) {
+        g64_GameTime.minutes += 1;
+        g64_GameTime.seconds = 0;
+
+        if (g64_GameTime.minutes >= 60) {
+            g64_GameTime.hours += 1;
+            g64_GameTime.minutes = 0;
+        }
+    }
+    
+    /*
+    microseconds += deltatime;
+
+    if (microseconds >= 1000000.0f) {
+        g64_GameTime[2] += 1;
+
+        if (g64_GameTime[2] >= 60) {
+            g64_GameTime[1] += 1;
+            g64_GameTime[2] = 0;
+
+            if (g64_GameTime[1] >= 60) {
+                g64_GameTime[0] += 1;
+                g64_GameTime[1] = 0;
+            }
+        }
+    }
+    */
+
+    //g64_GameTime[2] += TIMER_MICROS(newTime - oldTime);
+
+    
+    fprintf(stderr, "\nTime | %i:%i:%.04f)\n\n", g64_GameTime.hours, g64_GameTime.minutes, g64_GameTime.seconds);
+}
+
+
+void gin64_fps() {
     //NOTE: FPS calculation for libdragon swiped from Fazana
 
-    static unsigned int curFrameTimeIndex = 0;
-    static unsigned int frameTimes[30];
+
     unsigned int newTime = timer_ticks();
     unsigned int  oldTime = frameTimes[curFrameTimeIndex];
     frameTimes[curFrameTimeIndex] = newTime;
@@ -225,19 +370,20 @@ void g64_fps() {
     gFPS = (30 * 1000000.0f) / TIMER_MICROS(newTime - oldTime);
 }
 
-float g64_GetFPS() {
-
-    return gFPS;
-}
 
 
 
 rdpq_font_t* debugFont;
 
+extern playerState player;
+
 char debugStringA[16];
 char debugStringB[16];
+char debugStringC[16];
+char debugStringD[16];
+char debugStringE[16];
 
-void g64_InitDebug() {
+void gin64_InitDebug() {
 
     debug_init_isviewer();
     debug_init_usblog();
@@ -264,33 +410,23 @@ void gin64_ResetTriCounter() {
 }
 
 
+
+
 extern int itemToPlace;
 
-void g64_UpdateDebug() {
+void gin64_UpdateDebug() {
 
     rdpq_font_begin(RGBA32(58, 138, 127, 255));
-    rdpq_font_position(20, 50);
+    rdpq_font_position(20, 30);
 
     sprintf(debugStringA, "FPS %i", (int)gFPS);
-    
 
     rdpq_font_print(debugFont, debugStringA);
 
 
-    rdpq_font_position(20, 80);
+    rdpq_font_position(20, 40);
     sprintf(debugStringB, "Tri %i", g64_TriCounter);
     rdpq_font_print(debugFont, debugStringB);
-
-    rdpq_font_position(220, 50);
-    if(itemToPlace == 0)
-        sprintf(debugStringB, "Small Castle");
-    else if (itemToPlace == 1)
-        sprintf(debugStringB, "Watch Tower");
-    else if (itemToPlace == 2)
-        sprintf(debugStringB, "Large Castle");
-
-    rdpq_font_print(debugFont, debugStringB);
-
 
     rdpq_font_end();
 

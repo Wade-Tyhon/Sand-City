@@ -29,6 +29,31 @@ typedef struct {
 	
 }playfieldState;
 
+
+typedef struct {
+
+    int mat_sand;
+    int mat_shells;
+
+}playerState;
+
+typedef struct {
+
+    u8 propertyTaxRate;
+    u8 salesTaxRate;
+    u8 residents;
+    u8 buildings;
+    u8 mood;
+    //u8 mat_sand;
+    //u8 mat_shells;
+
+}cityState;
+
+typedef struct {
+    bool unlock_wall; //after certain conditions are met, allow the user to place walls
+    bool unlock_lighthouse; //after certain conditions are met, allow the user to place a single lighthouse on the playfield
+}gameFlags;
+
 typedef struct {
 
     InputVector2 cursor; //D Pad, C Pad  or Analog - selecting which tile to interact with

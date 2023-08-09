@@ -188,6 +188,8 @@ void SC_SimpleTower_DL_LOD0() {
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
 
+    
+
     glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_SimpleTower_LOD0));
     glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_SimpleTower_LOD0));
     glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_SimpleTower_LOD0));
@@ -196,11 +198,12 @@ void SC_SimpleTower_DL_LOD0() {
     glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
     glDrawElements(GL_TRIANGLES, sizeof(poly_SimpleTower_LOD0_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_SimpleTower_LOD0_Beach);
 
-
+    
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
+    
 
     gin64_UpdateTriCounter(30);
 }
@@ -344,12 +347,14 @@ static const uint16_t poly_SimpleTower_LOD2_Beach[] = {
 
 void SC_SimpleTower_DL_LOD2() {
 
+    
     glEnable(GL_CULL_FACE);
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
+    
 
     glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_SimpleTower_LOD2));
     glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_SimpleTower_LOD2));
@@ -359,11 +364,12 @@ void SC_SimpleTower_DL_LOD2() {
     glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
     glDrawElements(GL_TRIANGLES, sizeof(poly_SimpleTower_LOD2_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_SimpleTower_LOD2_Beach);
 
-
+    
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
+    
 
     gin64_UpdateTriCounter(11);
 }
@@ -831,12 +837,14 @@ static const uint16_t poly_LargeTower_LOD2_SandTopper[] = {
 
 void SC_LargeTower_DL_LOD2() {
 
+    
     glEnable(GL_CULL_FACE);
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
+    
 
     glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_LargeTower_LOD2));
     glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_LargeTower_LOD2));
@@ -852,195 +860,14 @@ void SC_LargeTower_DL_LOD2() {
     glDrawElements(GL_TRIANGLES, sizeof(poly_LargeTower_LOD2_SandTopper) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_LargeTower_LOD2_SandTopper);
 
     glEnable(GL_CULL_FACE); //----- Note ----- Re-enable culling
-
+    
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
-
-    gin64_UpdateTriCounter(11);
+    
+    gin64_UpdateTriCounter(15);
 }
-
-
-
-
-
-
-
-
-static const gl_XP64_Vert vert_TallTower[] = {
-      {.pos = {0.00, 0.58, 2.55}, .uv = {0.98, -0.84}, .vNormal = { 0.00, 81.00, 97.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.59, 0.34, 2.34}, .uv = {0.57, -0.56}, .vNormal = { 107.00, 61.00, 29.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.00, 0.68, 2.34}, .uv = {1.02, -0.67}, .vNormal = { 0.00, 123.00, 29.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.50, 0.29, 2.55}, .uv = {0.53, -0.74}, .vNormal = { 70.00, 40.00, 97.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.59, -0.34, 2.34}, .uv = {0.13, -0.46}, .vNormal = { 107.00, -61.00, 29.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.50, -0.29, 2.55}, .uv = {0.09, -0.64}, .vNormal = { 70.00, -40.00, 97.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.00, -0.68, 2.34}, .uv = {-0.32, -0.36}, .vNormal = { 0.00, -123.00, 29.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.00, -0.58, 2.55}, .uv = {2.32, -1.14}, .vNormal = { 0.00, -81.00, 97.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {-0.59, -0.34, 2.34}, .uv = {1.91, -0.87}, .vNormal = { -107.00, -61.00, 29.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.00, -0.68, 2.34}, .uv = {2.36, -0.97}, .vNormal = { 0.00, -123.00, 29.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.00, 0.58, 2.55}, .uv = {0.25, -0.49}, .vNormal = { 0.00, 81.00, 97.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.50, -0.29, 2.55}, .uv = {0.46, -0.13}, .vNormal = { 70.00, -40.00, 97.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.50, 0.29, 2.55}, .uv = {0.46, -0.37}, .vNormal = { 70.00, 40.00, 97.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {-0.50, -0.29, 2.55}, .uv = {1.87, -1.04}, .vNormal = { -70.00, -40.00, 97.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {-0.59, 0.34, 2.34}, .uv = {1.47, -0.77}, .vNormal = { -107.00, 61.00, 29.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {-0.50, 0.29, 2.55}, .uv = {1.43, -0.94}, .vNormal = { -70.00, 40.00, 97.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.71, 0.41, 0.04}, .uv = {0.46, -2.12}, .vNormal = { 89.00, 51.00, -74.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.00, -0.82, 0.04}, .uv = {0.25, -1.76}, .vNormal = { 0.00, -102.00, -74.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {-0.71, 0.41, 0.04}, .uv = {0.05, -2.12}, .vNormal = { -89.00, 51.00, -74.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.00, 0.82, 0.04}, .uv = {1.29, 0.52}, .vNormal = { 0.00, 102.00, -74.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {-0.71, 0.41, 0.04}, .uv = {1.73, 0.42}, .vNormal = { -89.00, 51.00, -74.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {-0.71, -0.41, 0.04}, .uv = {2.18, 0.32}, .vNormal = { -89.00, -51.00, -74.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.00, -0.82, 0.04}, .uv = {2.63, 0.22}, .vNormal = { 0.00, -102.00, -74.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.00, -0.82, 0.04}, .uv = {-0.05, 0.82}, .vNormal = { 0.00, -102.00, -74.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.71, -0.41, 0.04}, .uv = {0.39, 0.72}, .vNormal = { 89.00, -51.00, -74.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.71, 0.41, 0.04}, .uv = {0.84, 0.62}, .vNormal = { 89.00, 51.00, -74.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {-0.50, -0.29, 2.55}, .uv = {0.04, -0.13}, .vNormal = { -70.00, -40.00, 97.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.00, -0.58, 2.55}, .uv = {0.25, -0.01}, .vNormal = { 0.00, -81.00, 97.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.00, -0.58, 2.55}, .uv = {-0.36, -0.54}, .vNormal = { 0.00, -81.00, 97.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.00, 0.82, 0.04}, .uv = {0.25, -2.24}, .vNormal = { 0.00, 102.00, -74.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.71, -0.41, 0.04}, .uv = {0.46, -1.88}, .vNormal = { 89.00, -51.00, -74.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {-0.71, -0.41, 0.04}, .uv = {0.05, -1.88}, .vNormal = { -89.00, -51.00, -74.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {-0.50, 0.29, 2.55}, .uv = {0.04, -0.37}, .vNormal = { -70.00, 40.00, 97.00}, .vColor = { 255, 255, 255, 255 } },
-
-};
-
-static const uint16_t poly_TallTower_Beach[] = {
-    //>------------------------------
-       //>     + matName: Beach 
-       //>          - matTextureName: Sand-Texture-1 
-       //>          - matTextureSize(x,y):  (64, 64) 
-
-    //>------------------------------
-
-          0, 1, 2,
-          3, 4, 1,
-          5, 6, 4,
-          7, 8, 9,
-          10, 11, 12,
-          13, 14, 8,
-          15, 2, 14,
-          16, 17, 18,
-          14, 19, 20,
-          8, 20, 21,
-          9, 21, 22,
-          4, 23, 24,
-          1, 24, 25,
-          2, 25, 19,
-          10, 26, 27,
-          0, 3, 1,
-          3, 5, 4,
-          5, 28, 6,
-          7, 13, 8,
-          10, 27, 11,
-          13, 15, 14,
-          15, 0, 2,
-          18, 29, 16,
-          16, 30, 17,
-          17, 31, 18,
-          14, 2, 19,
-          8, 14, 20,
-          9, 8, 21,
-          4, 6, 23,
-          1, 4, 24,
-          2, 1, 25,
-          10, 32, 26,
-
-};
-
-
-void SC_TallTower_DL() {
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-
-    glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_TallTower));
-    glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_TallTower));
-    glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_TallTower));
-    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_TallTower));
-
-    glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
-    glDrawElements(GL_TRIANGLES, sizeof(poly_TallTower_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_TallTower_Beach);
-
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-}
-
-
-
-
-
-
-static const gl_XP64_Vert vert_WatchTower[] = {
-      {.pos = {0.00, 0.35, 2.50}, .uv = {0.17, -0.48}, .vNormal = { 0.00, 117.00, 49.00}, .vColor = { 218, 205, 196, 255 } },
-      {.pos = {0.00, -0.00, 2.85}, .uv = {0.11, -0.33}, .vNormal = { 0.00, 0.00, 127.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.31, 0.18, 2.50}, .uv = {0.17, -0.32}, .vNormal = { 101.00, 58.00, 49.00}, .vColor = { 231, 223, 218, 255 } },
-      {.pos = {0.00, -0.00, 2.85}, .uv = {0.11, -0.16}, .vNormal = { 0.00, 0.00, 127.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.31, -0.18, 2.50}, .uv = {0.17, -0.15}, .vNormal = { 101.00, -58.00, 49.00}, .vColor = { 231, 223, 218, 255 } },
-      {.pos = {0.00, -0.00, 2.85}, .uv = {0.11, -0.00}, .vNormal = { 0.00, 0.00, 127.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.00, -0.35, 2.50}, .uv = {0.16, -0.00}, .vNormal = { 0.00, -117.00, 49.00}, .vColor = { 218, 205, 196, 255 } },
-      {.pos = {0.00, -0.35, 2.50}, .uv = {0.17, -0.97}, .vNormal = { 0.00, -117.00, 49.00}, .vColor = { 218, 205, 196, 255 } },
-      {.pos = {0.00, -0.00, 2.85}, .uv = {0.11, -0.83}, .vNormal = { 0.00, 0.00, 127.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {-0.31, -0.18, 2.50}, .uv = {0.17, -0.82}, .vNormal = { -101.00, -58.00, 49.00}, .vColor = { 194, 169, 158, 255 } },
-      {.pos = {0.00, -0.00, 2.85}, .uv = {0.11, -0.66}, .vNormal = { 0.00, 0.00, 127.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {-0.31, 0.18, 2.50}, .uv = {0.17, -0.65}, .vNormal = { -101.00, 58.00, 49.00}, .vColor = { 194, 169, 158, 255 } },
-      {.pos = {0.00, -0.00, 2.85}, .uv = {0.11, -0.50}, .vNormal = { 0.00, 0.00, 127.00}, .vColor = { 255, 255, 255, 255 } },
-      {.pos = {0.49, 0.28, 0.03}, .uv = {0.46, -2.12}, .vNormal = { 89.00, 51.00, -73.00}, .vColor = { 201, 181, 165, 255 } },
-      {.pos = {0.00, -0.56, 0.03}, .uv = {0.25, -1.76}, .vNormal = { 0.00, -110.00, -62.00}, .vColor = { 204, 184, 170, 255 } },
-      {.pos = {-0.49, 0.28, 0.03}, .uv = {0.05, -2.12}, .vNormal = { -101.00, 58.00, -49.00}, .vColor = { 185, 155, 141, 255 } },
-      {.pos = {0.00, 0.56, 0.03}, .uv = {0.62, -0.50}, .vNormal = { 0.00, 103.00, -73.00}, .vColor = { 204, 184, 170, 255 } },
-      {.pos = {-0.49, 0.28, 0.03}, .uv = {0.62, -0.66}, .vNormal = { -101.00, 58.00, -49.00}, .vColor = { 185, 155, 141, 255 } },
-      {.pos = {-0.49, -0.28, 0.03}, .uv = {0.62, -0.83}, .vNormal = { -82.00, -47.00, 83.00}, .vColor = { 170, 119, 113, 255 } },
-      {.pos = {0.00, -0.56, 0.03}, .uv = {0.62, -1.00}, .vNormal = { 0.00, -110.00, -62.00}, .vColor = { 204, 184, 170, 255 } },
-      {.pos = {0.00, -0.56, 0.03}, .uv = {0.62, -0.00}, .vNormal = { 0.00, -110.00, -62.00}, .vColor = { 204, 184, 170, 255 } },
-      {.pos = {0.49, -0.28, 0.03}, .uv = {0.62, -0.16}, .vNormal = { 89.00, -51.00, -73.00}, .vColor = { 204, 184, 170, 255 } },
-      {.pos = {0.49, 0.28, 0.03}, .uv = {0.62, -0.33}, .vNormal = { 89.00, 51.00, -73.00}, .vColor = { 201, 181, 165, 255 } },
-      {.pos = {-1.12, -0.41, 0.03}, .uv = {0.77, -0.84}, .vNormal = { 0.00, 0.00, 127.00}, .vColor = { 244, 241, 239, 255 } },
-      {.pos = {0.00, 0.56, 0.03}, .uv = {0.25, -2.24}, .vNormal = { 0.00, 103.00, -73.00}, .vColor = { 204, 184, 170, 255 } },
-      {.pos = {0.49, -0.28, 0.03}, .uv = {0.46, -1.88}, .vNormal = { 89.00, -51.00, -73.00}, .vColor = { 204, 184, 170, 255 } },
-      {.pos = {-0.49, -0.28, 0.03}, .uv = {0.05, -1.88}, .vNormal = { -82.00, -47.00, 83.00}, .vColor = { 170, 119, 113, 255 } },
-
-};
-
-static const uint16_t poly_WatchTower_Beach[] = {
-    //>------------------------------
-       //>     + matName: Beach 
-       //>          - matTextureName: Sand-Texture-1 
-       //>          - matTextureSize(x,y):  (64, 64) 
-
-    //>------------------------------
-
-          0, 1, 2,
-          2, 3, 4,
-          4, 5, 6,
-          7, 8, 9,
-          9, 10, 11,
-          11, 12, 0,
-          13, 14, 15,
-          11, 16, 17,
-          9, 17, 18,
-          7, 18, 19,
-          4, 20, 21,
-          2, 21, 22,
-          0, 22, 16,
-          18, 17, 23,
-          18, 23, 19,
-          15, 24, 13,
-          13, 25, 14,
-          14, 26, 15,
-          11, 0, 16,
-          9, 11, 17,
-          7, 9, 18,
-          4, 6, 20,
-          2, 4, 21,
-          0, 2, 22,
-
-};
 
 
 
@@ -1257,12 +1084,14 @@ void SC_WatchTower_DL_LOD1() {
 
 void SC_WatchTower_DL_LOD2() {
 
+    
     glEnable(GL_CULL_FACE);
 
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
+    
 
     glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_WatchTower_LOD2));
     glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_WatchTower_LOD2));
@@ -1272,11 +1101,12 @@ void SC_WatchTower_DL_LOD2() {
     glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
     glDrawElements(GL_TRIANGLES, sizeof(poly_WatchTower_LOD2_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_WatchTower_LOD2_Beach);
 
-
+    
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_NORMAL_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
+    
 
     gin64_UpdateTriCounter(11);
 }
@@ -1286,37 +1116,6 @@ void SC_WatchTower_DL_LOD2() {
 
 //extern GLfloat light_pos[2][4];
 //extern GLfloat light_diffuse[2][4];
-
-void draw_castle_watchtower()
-{
-
-    //----- Note ---- automatic demo to show the different levels sand can be placed at
-    //beachSandDemo();
-
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-
-    glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_WatchTower));
-    glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_WatchTower));
-    glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_WatchTower));
-    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_WatchTower));
-
-    glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
-    glDrawElements(GL_TRIANGLES, sizeof(poly_WatchTower_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_WatchTower_Beach);
-
-
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-
-}
-
-
-
 
 //--------------------------------------- TowerWallEnd ---------------------------------------
    //ACTIVE OBJ MATERIALS: 

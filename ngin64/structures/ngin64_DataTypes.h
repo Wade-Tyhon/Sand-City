@@ -51,6 +51,17 @@ typedef struct {
 	float y;
 }Vector2;
 
+typedef struct {
+    int x;
+    int y;
+}Coords2;
+
+typedef struct {
+    int x;
+    int y;
+    int z;
+}Coords3;
+
 /*NGin64 styled Vertex and Tri index - for storing model data*/
 
 typedef struct {

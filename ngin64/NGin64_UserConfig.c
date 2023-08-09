@@ -46,7 +46,7 @@ CameraObject mainCamera =
     {{0,-10,100}, {0,0,0}, {1,1,1}},//mainCamera.obj ( {pos}, {rot}, {scl})
     NULL, //mainCamera.camLook
     {0,0,0}, //mainCamera.camLookPoint
-    {0,-6,6}, //mainCamera.cameraOffset
+    {0,-6,5}, //mainCamera.cameraOffset
     {0,0,0}, //mainCamera.camLookPoint
     0.0f, //mainCamera.cameraOrbit
     0.0f, //mainCamera.audioOrbit
@@ -56,4 +56,37 @@ CameraObject mainCamera =
     0 //mainCamera.againstWall
 };
 
+/*
+typedef struct {
 
+    u8 mat_sand;
+    u8 mat_shells;
+
+}playerState;
+*/
+
+playerState player =
+{
+    100, // mat_sand
+    50 // mat_shells
+};
+
+/*
+typedef struct {
+
+    int propertyTax;
+    int salesTax;
+    int residents;
+    u8 mood;
+
+}cityState;
+*/
+
+
+cityState city =
+{
+    0, //propertyTax
+    0, //salesTax
+    0, //residents
+    0 //mood
+};

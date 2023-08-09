@@ -54,8 +54,8 @@ float deltaTime = 0.0f;
 #define DEBUG_RDP 0
 
 //Setup on screen debug 
-extern void g64_InitDebug();
-extern void g64_UpdateDebug();
+extern void gin64_InitDebug();
+extern void gin64_UpdateDebug();
 u8 debugUpdate;
 
 static uint32_t animation = 3283;
@@ -93,12 +93,12 @@ GLfloat light_diffuse[2][4] = {
 
 
 
-u8 textureTotal = 16; //used for loops
-GLuint textures[16];
-static sprite_t* sprites[16];
+u8 textureTotal = 19; //used for loops
+GLuint textures[19];
+static sprite_t* sprites[19];
 
 
-static const char *texture_path[16] = {
+static const char *texture_path[19] = {
     "rom:/circle0.sprite",
     "rom:/diamond0.sprite",
     "rom:/pentagon0.sprite",
@@ -115,10 +115,10 @@ static const char *texture_path[16] = {
     "rom:/Beach_chair_cloth.ci4.sprite",    
     "rom:/beach_chair_legs_light.ci4.sprite",
     "rom:/beach_chair_legs_dark.ci4.sprite",
+    "rom:/Crab_Shell.ci4.sprite",
+    "rom:/Crab_Legs.ci4.sprite",
+    "rom:/Crab_Legs_2.ci4.sprite",
 };
-
-
-
 
 GLuint uiTextures[1];
 static sprite_t* uiSprites[1];
@@ -187,21 +187,41 @@ static const char* wave_texture_path[52] = {
     "rom:/beach_waves_sequence49.sprite",
     "rom:/beach_waves_sequence50.sprite",
     "rom:/beach_waves_sequence51.sprite",
-
-
 };
 
 
 
 
+//g64_TimeEvent TaxEvent;
+//g64_GameTimer TaxTimer = { 0, 0, 10.0f };
+ 
 
-
+extern void SC_Events_Init();
+extern void SC_Events_Update();
 void setup()
 {
+
     
+
+    //----- Note ------------------------- NGin64 General Setup ------------------------------------
+    gin64_ProjSetup(); //Initial NGin64 Project Setup. (Many of these settings can be adjusted at run time if needed)
+
+    gin64_Controller_Init(); 
+    gin64_InitDebug(); //Set up on screen debug elements
+
+    gin64_CamInit();   
+    //----------------------------------------------------------------------------------------------
+
+
+
+
+
+
+    //----- Note --------------------------- Sand City Setup ---------------------------------------
+
     for (uint32_t i = 0; i < textureTotal; i++)
     {
-        sprites[i] = sprite_load(texture_path[i]);        
+        sprites[i] = sprite_load(texture_path[i]);
     }
 
 
@@ -211,18 +231,19 @@ void setup()
     }
 
 
-
-
     uiSprites[0] = sprite_load(ui_texture_path[0]);
-    
-    gin64_ProjSetup(); //Initial NGin64 Project Setup. (Many of these settings can be adjusted at run time if needed)
 
-    gin64_Controller_Init(); 
+    SC_Events_Init(); //----- Note ----- All vents need to be initiated before other gameplay scripts so that scripts can subscribe to each event!
+
     SC_Interface_Init();
-
-    gin64_CamInit();
-    g64_InitDebug(); //Set up on screen debug elements
+   
     beach_scene_init();
+
+    //----------------------------------------------------------------------------------------------
+
+
+
+
 
     gin64_LightingUpdate(); //NOTE ----- Set up lights and fog
 
@@ -268,6 +289,9 @@ void setup()
 
     glSpriteTextureN64(GL_TEXTURE_2D, uiSprites[0], &(rdpq_texparms_t) {.tmem_addr = 0, .palette = 0,});
     
+
+
+
 }
 
 void draw_quad()
@@ -287,11 +311,8 @@ void draw_quad()
 
 void render() 
 {
-
-    gin64_LightingUpdate(); //NOTE ----- Set up lights and fog
-
     gin64_BeginFrame(); //NGin64 Function - Clearing the frame buffer, the zbuffer, setting up the scene 
-
+    gin64_LightingUpdate(); //NOTE ----- Set up lights and fog
     gin64_CamView(distance, cam_rotate); //NGin64 Function - Setting up the camera and matrix for the current scene
 
     //----- Note ----- reset rendered tri counter: 
@@ -299,17 +320,19 @@ void render()
 
     render_beach_scene();
 
-    g64_UpdateDebug();
+    
 
     SC_Interface_Draw();
 
+
+    gin64_UpdateDebug();
     gin64_EndFrame(); //Perform any final funtions and gl_context_end
 
     rdpq_detach_show();
 }
 
 
-
+extern void SC_Events_Update();
 
 int main()
 {
@@ -328,8 +351,6 @@ int main()
     rdpq_debug_log(true);
 #endif
 
-    
-
     setup();
     gin64_InitTimers();
     controller_init();
@@ -338,47 +359,27 @@ int main()
     while (1)
 #endif
     {
-
         gin64_SetDeltaTime();
+        gin64_Time();
+       
 
-        //controller_scan();
-        //int dPadInput = get_dpad_direction(0);
-        //struct controller_data pressed = get_keys_pressed();
 
         gin64_Controller_Update();
+        
+        gin64_Events_Update();
 
-        /*
-        if (dPadInput == 2) {
-            if (scaleModel <= maxScale)
-                scaleModel += .02f;
-            else
-                scaleModel = maxScale;
-        }
-        else if (dPadInput == 6) {
-            if (scaleModel >= minScale)
-                scaleModel -= .02f;
-            else
-                scaleModel = minScale;
-        }
-        */
+       // SC_Events_Update();
+
         ngin64_UpdateCameraPosition();
 
-        /*
-        float camInputY = pressed.c[0].y / 128.f;
-        float canInputX = pressed.c[0].x / 128.f;
-        float mag = canInputX * canInputX + camInputY * camInputY;
-
-        if (fabsf(mag) > 0.01f) {
-            mainCamera.distance += camInputY * 0.2f;
-        }
-        */
-
-        render();
         
-        SC_Interface_Update();
+        render();
 
-            if (DEBUG_RDP)
-                rspq_wait();
+        SC_Interface_Update();
+        
+
+           if (DEBUG_RDP)
+               rspq_wait();
 
 
         

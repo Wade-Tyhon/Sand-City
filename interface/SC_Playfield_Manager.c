@@ -9,50 +9,6 @@
 #include "SC_Interface.h"
 #include "../scenes/prefabs/castles/SC_CastlesTypes.h"
 
-//extern void g64_ControllerInput();
-//Gin64_GameplayInput
-
-
-/* ----- To Do Notes for Sand City -----
-* 
-*   - I am now storing references to prefab display lists inside of 'S_PlayfieldState_Pending'
-*       - these will be saved in the variable 'g64_EnvObjectPrefab* structure';
-*       - these will be drawn at the end of each frame after the environment and playfield but before transparent objects
-*       - Create a NEW render function where all of the objects can be cycled through at the end of each frame such as:
-*           RenderInstanceObjects()
-*               - look for instances of 'SC_TallTower_PF' inside of 'S_PlayfieldState_Pending'
-*               - draw each instance of each object with a rendering function 
-*       - look at 'RenderInstanceObj(&Beach_palm_single001,3000); //RenderInstanceObj(instance object name, LODStep) (ex > 5000 = LOD1, ? 10000 = LOD2)'
-
-* 
-* 
-* 
-* 
-* 
-*   - Figure out how to do alpha transparency with vector colors...
-*   - Refine the playback framerate function 'SC_Playfield_Control_Update' to make for smooth movement 
-    - Create a playback framerate function counter in ngin64_tools for animations fo textures, models, and cursor movements 
-
-*   - Tie position of the 'poly_SelectGroundUI_Beach' interface element to the playfield state 'S_PlayfieldState_Current'
-*   - Get player input from g64_Pad[0], which is saved in ngin64_ControllerInput
-*       -   Test different options for input includign Dpad, Cpad and Analog stick input
-*       -   If directional input is held down: 
-            Immediately initiate movement then hold for a fraction of a second
-            If direction is still held down, move a second time then wait for a smaller fraction of a second
-            If direction is still held down, move a third time then wait for a smaller fraction of a second
-
-    
-*
-*/
-/*
-typedef struct {
-
-    //Vector2 activeTile;
-    int column;
-    int row;
-    Vector3 pos;
-}CursorObject;
-*/
 
 extern gl_XP64_Vert vert_SelectStructureUI[];
 extern uint16_t poly_SelectStructureUI[];
@@ -65,25 +21,47 @@ extern uint16_t SCGet_poly_SelectGroundUI_Beach_Size();
 uint16_t poly_SelectGroundUI_Beach_Size;
 
 extern gl_XP64_Vert vert_BeachPlayfield[];
-extern playfieldState S_PlayfieldState_Pending[16][7];
-extern playfieldState S_PlayfieldState_Current[16][7];
-extern int editableBlocks[16][7][4];
-extern Vector3 SCGet_Playfield_Tile_Position(int column, int row);
-extern bool SC_Set_PlayfieldTile(int column, int row, char update[12]);
 
+extern int editableBlocks[16][7][4];
 
 CursorObject playfieldCursor;
 
+extern playerState player; 
+extern cityState city;
 
-//Vector3 newCursorPosition;
 
-void SC_Playfield_Control_Init() {
+void SC_PlayfieldTaxEvents_Update();
+void SC_PlayfieldSalesTax_Update(g64_EventArgs* tempArgs);
+void SC_PlayfieldPropertyTax_Update(g64_EventArgs* tempArgs);
+void SC_PlayfieldBuildEvent(g64_EventArgs* tempArgs);
+
+void SC_PlayfieldLandscapeEvent(g64_EventArgs* tempArgs);
+
+void SC_Playfield_Cursor_Init() {
 
     poly_SelectGroundUI_Beach_Size = SCGet_poly_SelectGroundUI_Beach_Size();
     S_PlayfieldState_Pending[8][4].cursorActive = true;
 
     playfieldCursor.column = 8;
     playfieldCursor.row = 4;
+
+
+    gin64_Event_Subscribe(&SalesTaxEvent.OnTimerEnd, &SC_PlayfieldSalesTax_Update);
+    gin64_Event_Subscribe(&PropertyTaxEvent.OnTimerEnd, &SC_PlayfieldPropertyTax_Update);
+    gin64_Event_Subscribe(&BuildObjectEvent.OnTrigger, &SC_PlayfieldBuildEvent);
+    gin64_Event_Subscribe(&LandscapeEvent.OnTrigger, &SC_PlayfieldLandscapeEvent);
+
+
+    //LandscapeEvent
+
+    //----- Note ----- initiate the state of the city
+
+    city.propertyTaxRate = 2;
+    city.salesTaxRate = 1;
+    city.residents = 0;
+    city.buildings = 0;
+    city.mood = 10;
+
 
     #ifdef DEBUG_NGIN64_INTERFACE
         //fprintf(stderr, "\nTesting Input | A %i | B %i", g64_Pad[0].hold.A, g64_Pad[0].hold.B);
@@ -122,36 +100,17 @@ int itemToPlace = 0; //----- Note ----- Temporary variable for selecting which i
 
 
 
-void SC_Playfield_Control_Update() {
+
+void SC_Playfield_Cursor_Update() {
+
+        //----- Note ----- Run city state update each frame before all other playfield updates  
+        //                  This will update things like material reserves, shell reserves, unlock items and new events 
+
 
     #ifdef DEBUG_NGIN64_INTERFACE
 	    //fprintf(stderr, "\nTesting Input | A %i | B %i", g64_Pad[0].hold.A, g64_Pad[0].hold.B);
 	    fprintf(stderr, "\n > RUN SC_Playfield_Control_Update!\n");
     #endif
-        
-
-
-        //----- Note ----- This is a temporary solution for selecting an item to place.... 
-        if (g64_Pad[0].Press.C_Right == 1) {
-            if ((itemToPlace + 1) <= 2)
-                itemToPlace += 1;
-            else
-                itemToPlace = 0;
-        }
-
-        else if (g64_Pad[0].Press.C_Left == 1) {
-            if ((itemToPlace - 1) >= 0)
-                itemToPlace -= 1;
-            else
-                itemToPlace = 2;
-        }
-
-
-
-
-
-
-
 
         if(directionHold == false){
 
@@ -235,9 +194,6 @@ void SC_Playfield_Control_Update() {
 
         }
 
-
-
-
         //------ Note ------ Check for holding the Dpad as a directional input for fast movement
         if (g64_Pad[0].Dpad.x >= 0 || g64_Pad[0].Dpad.y >= 0) {
 
@@ -266,55 +222,6 @@ void SC_Playfield_Control_Update() {
 
 
 
-        //----- Note ----- Check for filling or digging into the sand
-        //g64_Pad[0].Press.A = press.c[0].A;
-        // g64_Pad[0].Press.B = press.c[0].B;
-
-        bool completed = false;
-
-        if (g64_Pad[0].Press.B == 1) {
-            char command[12] = "Dig";
-            completed = SC_Set_PlayfieldTile(playfieldCursor.column, playfieldCursor.row, command);
-        }
-
-        else if (g64_Pad[0].Press.A == 1){
-            char command[12] = "Fill";
-            completed = SC_Set_PlayfieldTile(playfieldCursor.column, playfieldCursor.row, command);
-        }
-
-
-        if (g64_Pad[0].Press.L == 1) {
-            S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
-
-
-
-            switch (itemToPlace) {
-
-                case 0:
-                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_SimpleTower_PF;
-                    break;
-                case 1:
-                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_WatchTower_PF;
-                    break;
-                case 2:
-                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_LargeTower_PF;
-                    break;
-            }
-
-            //S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_SimpleTower_PF;
-            S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.obj.pos = SCGet_Playfield_Tile_Position(playfieldCursor.column, playfieldCursor.row);
-        }
-
-
-        if (completed == false) {
-
-            #ifdef DEBUG_NGIN64_INTERFACE
-                    fprintf(stderr, "\n > SC_Playfield_Control_Update - Playfield Not Updated! \n");
-            #endif
-        }
-
-
-
         #ifdef DEBUG_NGIN64_INTERFACE
                 fprintf(stderr, "\n > Column: %i | Row: %i \n", (playfieldCursor.column), (playfieldCursor.row));
                 fprintf(stderr, "\n > directionHold: %i | inputTimer: %.2f \n", (directionHold), (inputTimer));
@@ -334,21 +241,7 @@ void SC_Playfield_Control_Update() {
 
 bool assigned = false;
 
-void SC_Playfield_Control_Draw() {
-    /*
-    if (assigned == false){
-        S_PlayfieldState_Pending[8][4].updating = true;
-        S_PlayfieldState_Pending[8][4].structure = SC_SimpleTower_PF;
-        S_PlayfieldState_Pending[8][4].structure.obj.pos = SCGet_Playfield_Tile_Position(8, 4);
-
-
-        S_PlayfieldState_Pending[6][4].updating = true;
-        S_PlayfieldState_Pending[6][4].structure = SC_LargeTower_PF;
-        S_PlayfieldState_Pending[6][4].structure.obj.pos = SCGet_Playfield_Tile_Position(6, 4);
-
-        assigned = true;
-    }
-    */
+void SC_Playfield_Cursor_Draw() {
 
     glPushMatrix();
 
@@ -356,10 +249,9 @@ void SC_Playfield_Control_Draw() {
 
     glPushMatrix();
     glColor3f(1, 1, 1);
-    // Apply vertex color as material color.
-    // Because the cube has colors set per vertex, we can color each face seperately
+
     glDisable(GL_TEXTURE_2D);
-    //glDisable(GL_FOG)
+
     glEnable(GL_COLOR_MATERIAL);
 
     glDisable(GL_FOG);
@@ -393,7 +285,120 @@ void SC_Playfield_Control_Draw() {
     glEnable(GL_FOG);
 
     glPopMatrix();
+}
 
-   
+void SC_PlayfieldLandscapeEvent(g64_EventArgs* tempArgs) {
+    
+    bool completed = false;
+  
+    switch (landscapeTypeState) {
+
+        case 1: //Ground adjustment
+                if (strcmp(tempArgs->key, "Dig") == 0){
+                    completed = SC_Set_PlayfieldTile(playfieldCursor.column, playfieldCursor.row, tempArgs->key);
+                    if (completed)
+                        player.mat_sand += 10; //use up your source of sand to create a hill
+                }
+
+                if ((strcmp(tempArgs->key, "Fill") == 0) && (player.mat_sand - 10 >= 0)) {
+                    completed = SC_Set_PlayfieldTile(playfieldCursor.column, playfieldCursor.row, tempArgs->key);
+                    if (completed)
+                        player.mat_sand -= 10; //use up your source of sand to create a hill
+                }
+
+            break;
+
+        case 2:
+                fprintf(stderr, "\n\n--------\n!!! Fill Water Event !!! \n--------\n\n");
+                fprintf(stderr, "\n\n--------\n!!! Fill Water Event !!! \n--------\n\n");
+                fprintf(stderr, "\n\n--------\n!!! Fill Water Event !!! \n--------\n\n");
+                fprintf(stderr, "\n\n--------\n!!! Fill Water Event !!! \n--------\n\n");
+            break;
+
+        default: //Water Fill / Drain
+            //Do nothing
+            break;
+
+    }
+    
+}
+
+
+void SC_PlayfieldBuildEvent(g64_EventArgs* tempArgs) {
+    fprintf(stderr, "\n\n--------\n!!! Place Object Event !!! \n--------\n\n");
+
+    switch (buildingTypeState) {
+
+        case 1: //Build a small tower
+            //fprintf(stderr, "\n\n--------\n!!! Place Object !!! \n--------\n\n");
+            if ((SC_SimpleTower_PF.pointsB <= player.mat_sand) && (SC_SimpleTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_SimpleTower_PF;
+                player.mat_sand -= SC_SimpleTower_PF.pointsB; // source the raw materials for this with sand
+                player.mat_shells -= SC_SimpleTower_PF.pointsC; // pay for this build with shells
+                city.residents += 2;
+                city.buildings += 1;
+            }
+        
+            break;
+
+        case 2: //Build a large tower
+            if ((SC_LargeTower_PF.pointsB <= player.mat_sand) && (SC_LargeTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_LargeTower_PF;
+                player.mat_sand -= SC_LargeTower_PF.pointsB; // source the raw materials for this with sand
+                player.mat_shells -= SC_LargeTower_PF.pointsC; // pay for this build with shells
+                city.residents += 4;
+                city.buildings += 1;
+            }
+            break;
+
+        case 3: //Build a watch tower
+            if ((SC_WatchTower_PF.pointsB <= player.mat_sand) && (SC_WatchTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_WatchTower_PF;
+                player.mat_sand -= SC_WatchTower_PF.pointsB; // source the raw materials for this with sand
+                player.mat_shells -= SC_WatchTower_PF.pointsC; // pay for this build with shells
+                city.residents += 1;
+                city.buildings += 1;
+            }
+            break;
+
+            //----- Note ----- placeholder until all other models are completed
+        default:
+            if ((SC_LargeTower_PF.pointsB <= player.mat_sand) && (SC_LargeTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_LargeTower_PF;
+                player.mat_sand -= SC_LargeTower_PF.pointsB; // source the raw materials for this with sand
+                player.mat_shells -= SC_LargeTower_PF.pointsC; // pay for this build with shells
+                city.residents += 4;
+                city.buildings += 1;
+            }
+            break;
+    }
+
+    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.obj.pos = SCGet_Playfield_Tile_Position(playfieldCursor.column, playfieldCursor.row);
+
+}
+
+void SC_PlayfieldSalesTax_Update(g64_EventArgs* tempArgs) {
+
+    int salesTaxIncome = (1 + (city.mood * .25)) * (city.residents * city.salesTaxRate);
+
+    if(player.mat_shells + salesTaxIncome < 10000)
+        player.mat_shells += salesTaxIncome;
+    else
+        player.mat_shells = 99999;
+    
+}
+
+void SC_PlayfieldPropertyTax_Update(g64_EventArgs* tempArgs) {
+
+    int propTaxIncome = (2 * (city.buildings * city.propertyTaxRate));
+
+    if (player.mat_sand + propTaxIncome < 1000)
+        player.mat_sand += propTaxIncome;
+    else
+        player.mat_sand = 999;
 
 }

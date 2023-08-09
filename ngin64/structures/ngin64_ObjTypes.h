@@ -2,6 +2,14 @@
 #define NGIN64_OBJTYPES_H
 
 
+
+typedef struct {
+	int hours;
+	int minutes;
+	float seconds;
+
+}g64_GameTimer;
+
 typedef struct {
 	float r;
 	float g;
@@ -43,6 +51,7 @@ typedef struct
 	u8 animFrame; //NOTE: current frame of current animation
 	//GFX (*staticModel);
 	void(*displayList)();
+	GLuint glDisplayList;
 	//void* displayList; 
 }StaticModel;
 
@@ -55,6 +64,10 @@ typedef struct
 	TriggerBox trigBox;
 	MeshColliderObj* groundCollider;
 	MeshColliderObj* wallCollider;
+
+	u8 pointsH;
+	u8 pointsB;
+	u8 pointsC;
 	//short *wallColMeshSize;
 	//MeshCollider *wallMeshCol; //vertex positions of collision (float, float, float)
 	//MeshColliderTri *wallColTri; //collision mesh triangles (int,int,int)
