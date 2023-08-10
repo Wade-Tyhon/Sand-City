@@ -67,6 +67,10 @@ void SC_Playfield_Cursor_Init() {
         //fprintf(stderr, "\nTesting Input | A %i | B %i", g64_Pad[0].hold.A, g64_Pad[0].hold.B);
         fprintf(stderr, "\n > RUN SC_Playfield_Control_Init!\n");
     #endif
+
+
+
+
 }
 
 void SC_Playfield_Control_Movement() {   
@@ -100,11 +104,33 @@ int itemToPlace = 0; //----- Note ----- Temporary variable for selecting which i
 
 
 
+bool DEBUG_TEST_STATE = true;
+void SC_DEBUG_RUN_ONCE() {
+
+    for (int column = 0; column < 16; column++)
+        for (int row = 0; row < 7; row++) {
+
+            S_PlayfieldState_Pending[column][row].updating = true;
+            S_PlayfieldState_Pending[column][row].structure = SC_WatchTower_PF;
+            S_PlayfieldState_Pending[column][row].structure.obj.pos = SCGet_Playfield_Tile_Position(column, row);
+
+        }
+
+}
+
 
 void SC_Playfield_Cursor_Update() {
 
         //----- Note ----- Run city state update each frame before all other playfield updates  
         //                  This will update things like material reserves, shell reserves, unlock items and new events 
+
+    if (DEBUG_TEST_STATE == true) {
+
+        SC_DEBUG_RUN_ONCE();
+        DEBUG_TEST_STATE = false;
+    }
+    
+
 
 
     #ifdef DEBUG_NGIN64_INTERFACE

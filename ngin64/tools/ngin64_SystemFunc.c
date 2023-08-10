@@ -391,7 +391,7 @@ void gin64_InitDebug() {
     dfs_init(DFS_DEFAULT_LOCATION);
     display_init(RESOLUTION_320x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE);
     rdpq_init();
-    rdpq_debug_start();
+    //rdpq_debug_start();
 
     //debugFont = rdpq_font_load("rom:/Pacifico.font64");
     debugFont = rdpq_font_load("rom:/BRLNSDB.font64");

@@ -84,7 +84,10 @@ void SC_Prefabs_DrawCastles() {
 			//----- Note ----- Print basic sand texture only once to save performance
 
 			//if(S_PlayfieldState_Pending[column][row].structure.staticModel_LOD[0].displayList != NULL){
-				gin64_RenderEnvironmentObj(&S_PlayfieldState_Pending[column][row].structure, 2);
+				//gin64_RenderEnvironmentObj(&S_PlayfieldState_Pending[column][row].structure, 2);
+				gin64_RenderEnvironmentObj(&S_PlayfieldState_Current[column][row].structure, 2);
+
+				
 			//}
 			
 

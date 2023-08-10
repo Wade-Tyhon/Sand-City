@@ -6,6 +6,7 @@
 #include <math.h>
 
 #include "../../ngin64/nGin64.h"
+#include "../prefabs/castles/SC_CastlesTypes.h"
 
 
 
@@ -76,7 +77,6 @@ void s_playfield_init() {
     for(int column = 0; column < 16;  column++)
         for (int row = 0; row < 7; row++) {
 
-
             //----- Note -----  S_PlayfieldState_Current holds the current state of the playfield
             S_PlayfieldState_Current[column][row].updating = false; //Currently in the process of updating, no further changes can be made until completed
             S_PlayfieldState_Current[column][row].cursorActive = false; //Position of the cursor
@@ -87,21 +87,34 @@ void s_playfield_init() {
             S_PlayfieldState_Current[column][row].status = 0; //New, damaged, deteriorating, destroyed
             S_PlayfieldState_Current[column][row].power = false; //Is power available in this structure (if applicable)
             S_PlayfieldState_Current[column][row].residents = 0; //Number of animal residents in this structure (if applicable)
+            //S_PlayfieldState_Pending[column][row].structure = SC_WatchTower_PF;
             //S_PlayfieldState_Current[column][row].residents = NULL;
 
             //----- Note -----  S_PlayfieldState_Pending For assigning updates to the playfield... when boolean 'updating' is set to true on a particular tile, 
             //                  the updates will be compared against S_PlayfieldState_Current to figure out what changes need to be made
-            S_PlayfieldState_Pending[column][row].updating = false; //Currently in the process of updating, no further changes can be made until completed
+            S_PlayfieldState_Pending[column][row].updating = true; //Currently in the process of updating, no further changes can be made until completed
             S_PlayfieldState_Pending[column][row].cursorActive = false; //Currently in the process of updating, no further changes can be made until completed
-            S_PlayfieldState_Pending[column][row].groundHeight = pos_MID; //Position of playfield: standard, raised, lowered
+            S_PlayfieldState_Pending[column][row].groundHeight = pos_LOW; //Position of playfield: standard, raised, lowered
             S_PlayfieldState_Pending[column][row].water = 0; // no water, high water, mid water, low water, 
             S_PlayfieldState_Pending[column][row].strutureType = 0; //House unit, tower, wall, lighthouse, etc
             S_PlayfieldState_Pending[column][row].eventType = 0; //0 by default (no event), other events could be: "new resident" "received power" "upgrading to new structure" "damaged by waves" etc
             S_PlayfieldState_Pending[column][row].status = 0; //New, damaged, deteriorating, destroyed
             S_PlayfieldState_Pending[column][row].power = false; //Is power available in this structure (if applicable)
             S_PlayfieldState_Pending[column][row].residents = 0; //Number of animal residents in this structure (if applicable)
+            S_PlayfieldState_Pending[column][row].structure = SC_WatchTower_PF;
             //S_PlayfieldState_Pending[column][row].residents = NULL;
         }
+
+    /*
+
+    for (int column = 0; column < 16; column++)
+        for (int row = 0; row < 7; row++) {
+
+            S_PlayfieldState_Pending[column][row].updating = true;
+            S_PlayfieldState_Pending[column][row].structure = SC_WatchTower_PF;
+
+        }
+    */
 
 #ifdef DEBUG_NGIN64_INITFUNC
     fprintf(stderr, "\nInitiate Playfield\n\n");    
