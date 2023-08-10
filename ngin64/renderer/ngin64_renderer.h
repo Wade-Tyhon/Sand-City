@@ -8,8 +8,9 @@ extern Vector3 GetCameraPosition();
 
 extern u8 wideScreen;
 
-
+extern void gin64_DisplaySetup();
 extern void gin64_ProjSetup(); //Visual settings, only run when changes need to be made
+
 extern void gin64_BeginFrame();
 extern void gin64_EndFrame();
 

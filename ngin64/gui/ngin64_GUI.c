@@ -87,7 +87,7 @@ void gin64_GUI_Element_Draw(g64_GUI_Text* dynamicText) {
 
 void gin64_GUI_Text_Draw(g64_GUI_Text* dynamicText) {
 
-    rdpq_font_begin(RGBA32(dynamicText->color.r, dynamicText->color.g, dynamicText->color.b, 255));
+    //rdpq_font_begin(RGBA32(dynamicText->color.r, dynamicText->color.g, dynamicText->color.b, 255));
     rdpq_font_position(dynamicText->pos.x, dynamicText->pos.y);
     rdpq_font_print(defaultFont, dynamicText->write);
     rdpq_font_end();

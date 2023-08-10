@@ -338,7 +338,18 @@ void SC_Interface_Draw() {
 
     //gin64_GUI_TexWindow_Draw(&currentStatsTexWindow);
 
+
+    for (uint32_t i = 0; i < guiPlayfieldIconsTotal - 1; i++) {
+        // guiSprites[i] = sprite_load(guiSprites_path[i]);
+        gin64_GUI_Sprite_Draw(UI_PlayfieldIcons[i]);
+        //UI_PlayfieldIcons[i]->sprite = guiSprites[UI_PlayfieldIcons[i]->spriteID];
+    }
+
+
+
+    rdpq_font_begin(RGBA32(UI_BuildType.color.r, UI_BuildType.color.g, UI_BuildType.color.b, 255));
     gin64_GUI_Text_Draw(&UI_BuildType);
+    rdpq_font_begin(RGBA32(UI_Shells.color.r, UI_Shells.color.g, UI_Shells.color.b, 255));
     gin64_GUI_Text_Draw(&UI_Shells);
     gin64_GUI_Text_Draw(&UI_Sand);
     gin64_GUI_Text_Draw(&UI_Residents);
@@ -349,11 +360,7 @@ void SC_Interface_Draw() {
     //gin64_GUI_Sprite_Draw();
 
 
-    for (uint32_t i = 0; i < guiPlayfieldIconsTotal-1; i++) {
-        // guiSprites[i] = sprite_load(guiSprites_path[i]);
-        gin64_GUI_Sprite_Draw(UI_PlayfieldIcons[i]);
-        //UI_PlayfieldIcons[i]->sprite = guiSprites[UI_PlayfieldIcons[i]->spriteID];
-    }
+
 
 }
 extern enum g64_EditModeState editModeState;

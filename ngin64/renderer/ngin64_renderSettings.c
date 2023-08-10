@@ -29,7 +29,43 @@ extern CursorObject playfieldCursor;
 //static const GLfloat clear_frame_color[] = { 0.1f, 0.03f, 0.2f, 1.f };
 //static const GLfloat environment_color2[] = { 0.1f, 0.03f, 0.2f, 0.5f };
 /*------------------------------NGin64 Project Defaults---------------------------------*/
+
+
+float aspect_ratio;
+float near_plane;
+float far_plane;
+
+void gin64_DisplaySetup() {
+
+    display_init(RESOLUTION_320x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE);
+
+    zbuffer = surface_alloc(FMT_RGBA16, display_get_width(), display_get_height());
+
+    aspect_ratio = (float)display_get_width() / (float)display_get_height();
+    near_plane = viewSettings.nearPlane;
+    far_plane = viewSettings.farPlane;
+
+}
+
 void gin64_ProjSetup() {
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_NORMALIZE);
+
+    //----- Note ----- Projection
+    
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glFrustum(-near_plane * aspect_ratio, near_plane * aspect_ratio, -near_plane, near_plane, near_plane, far_plane);
+    
+}
+
+
+void gin64_ProjSetup_OLD() {
+
+
+    display_init(RESOLUTION_320x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE);
 
     zbuffer = surface_alloc(FMT_RGBA16, display_get_width(), display_get_height());
 
@@ -54,11 +90,11 @@ void gin64_ProjSetup() {
     */
 
     //----- Note ----- Projection
-    
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glFrustum(-near_plane * aspect_ratio, near_plane * aspect_ratio, -near_plane, near_plane, near_plane, far_plane);
-    
+
 }
 
 surface_t* disp;

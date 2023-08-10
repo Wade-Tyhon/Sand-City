@@ -336,22 +336,29 @@ extern void SC_Events_Update();
 
 int main()
 {
-    debug_init_isviewer();
-    debug_init_usblog();
 
-    dfs_init(DFS_DEFAULT_LOCATION);
+    /**/
+   // debug_init_isviewer();
+  //  debug_init_usblog();
 
-    display_init(RESOLUTION_320x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE_FETCH_ALWAYS);
+   // dfs_init(DFS_DEFAULT_LOCATION);
 
-    rdpq_init();
+    ////display_init(RESOLUTION_320x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE_FETCH_ALWAYS);
+    //display_init(RESOLUTION_320x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE);
+
+
+    gin64_DisplaySetup();
+
     gl_init();
+
+    setup();
 
 #if DEBUG_RDP
     rdpq_debug_start();
     rdpq_debug_log(true);
 #endif
 
-    setup();
+    
     gin64_InitTimers();
     controller_init();
 
