@@ -17,6 +17,8 @@
 
 #include "events/ngin64_EventTypes.h"
 
+#include "audio/ngin64_XMAudio_Defs.h"
+
 #include "gui/ngin64_GUI_Types.h"
 
 #include "tools/ngin64_Tools.h"
@@ -31,11 +33,11 @@
 /* ----- NOTE ----- In order to keep your UNFLoader output clean, enable only the function
                     sets that you want to debug. Comment out the ones that you do not need to debug*/
 
-//#define DEBUG_NGIN64_SYSTEMFUNC
+#define DEBUG_NGIN64_SYSTEMFUNC
 
 //#define DEBUG_NGIN64_INTERFACE
 
-#define DEBUG_NGIN64_CAMERA
+//#define DEBUG_NGIN64_CAMERA
 
 //#define DEBUG_NGIN64_INITFUNC
 

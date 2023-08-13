@@ -52,6 +52,8 @@ typedef struct
 	//GFX (*staticModel);
 	void(*displayList)();
 	GLuint glDisplayList;
+	GLuint glDisplayListB;
+	GLuint glDisplayListC;
 	//void* displayList; 
 }StaticModel;
 

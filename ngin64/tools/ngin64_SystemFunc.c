@@ -60,9 +60,9 @@ void gin64_InitTimers() {
 double FPS_10 = 0; // ~ 0.1000ms
 double FPS_15 = 0; // ~ 0.0666ms
 double FPS_20 = 0; // ~ 0.0495ms
-double FPS_30 = 0.0; // ~ 0.0333ms
+double FPS_30 = 0; // ~ 0.0333ms
 double FPS_40 = 0; // ~ 0.025ms
-double FPS_60 = 0.0; // ~ 0.0167ms
+double FPS_60 = 0; // ~ 0.0167ms
 
 
 double playbackElapsedTime = 0.0;

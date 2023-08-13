@@ -11,6 +11,7 @@ ngin =	ngin64/tools/ngin64_VectorFunc.c \
 		ngin64/input/ngin64_ControllerInput.c\
 		ngin64/events/ngin64_Events.c\
 		ngin64/events/ngin64_EventManager.c\
+		ngin64/audio/ngin64_XMAudio.c\
 		
 src =	SandCity_Main.c \
 		scenes/prefabs/castles/SC_Castles.c \
@@ -33,12 +34,15 @@ assets_png = $(wildcard assets/*.png)
 uiassets_png = $(wildcard assets/ui/*.png)
 wavesequence_png = $(wildcard assets/waves/*.png)
 assets_ttf = $(wildcard assets/*.ttf)
+assets_xm = $(wildcard assets/audio/*.xm)
 
 assets_conv = $(addprefix filesystem/,$(notdir $(assets_png:%.png=%.sprite))) \
-			  $(addprefix filesystem/,$(notdir $(assets_ttf:%.ttf=%.font64))) 
+			  $(addprefix filesystem/,$(notdir $(assets_ttf:%.ttf=%.font64)))
+			  
 
 ui_assets_conv = $(addprefix filesystem/ui/,$(notdir $(uiassets_png:%.png=%.sprite)))
 wave_assets_conv = $(addprefix filesystem/,$(notdir $(wavesequence_png:%.png=%.sprite)))
+audio_assets_conv = $(addprefix filesystem/,$(notdir $(assets_xm:%.xm=%.xm64)))
 
 #assets_conv = $(addprefix filesystem/,$(notdir $(assets_png:%.png=%.sprite)), $(notdir $(wavesequence_png:%.png=%.sprite)))
 
@@ -49,6 +53,7 @@ CFLAGS := $(CFLAGS) -O2 -Wno-unused-variable
 
 MKSPRITE_FLAGS ?=
 
+AUDIOCONV_FLAGS ?=
 
 all: SandCity.z64
 
@@ -62,6 +67,16 @@ filesystem/%.sprite: assets/ui/%.png
 	@echo "    [SPRITE] $@"
 	@$(N64_MKSPRITE) -f CI4 --compress -o "$(dir $@)" "$<"
 
+
+filesystem/%.xm64: assets/audio/%.xm
+	@mkdir -p $(dir $@)
+	@echo "    [AUDIO] $@"
+	@$(N64_AUDIOCONV) $(AUDIOCONV_FLAGS) -o "$(dir $@)" "$<"
+
+
+
+
+
 filesystem/%.sprite: assets/waves/%.png
 	@mkdir -p $(dir $@)
 	@echo "    [SPRITE] $@"
@@ -74,9 +89,12 @@ filesystem/%.font64: assets/%.ttf
 
 
 
+
+
 $(BUILD_DIR)/SandCity.dfs: $(assets_conv)
 $(BUILD_DIR)/SandCity.dfs: $(ui_assets_conv)
 $(BUILD_DIR)/SandCity.dfs: $(wave_assets_conv)
+$(BUILD_DIR)/SandCity.dfs: $(audio_assets_conv)
 $(BUILD_DIR)/SandCity.elf: $(ngin:%.c=$(BUILD_DIR)/%.o)
 $(BUILD_DIR)/SandCity.elf: $(src:%.c=$(BUILD_DIR)/%.o)
 

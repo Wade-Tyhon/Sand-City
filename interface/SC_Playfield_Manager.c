@@ -89,8 +89,6 @@ void SC_Playfield_Control_Camera() {
 }
 
 
-
-
 int previousFrame = 0;
 bool canUpdate = true;
 u8 updateRate = 2;
@@ -104,7 +102,7 @@ int itemToPlace = 0; //----- Note ----- Temporary variable for selecting which i
 
 
 
-bool DEBUG_TEST_STATE = true;
+bool DEBUG_TEST_STATE = false;
 void SC_DEBUG_RUN_ONCE() {
 
     for (int column = 0; column < 16; column++)
@@ -387,6 +385,41 @@ void SC_PlayfieldBuildEvent(g64_EventArgs* tempArgs) {
                 player.mat_shells -= SC_WatchTower_PF.pointsC; // pay for this build with shells
                 city.residents += 1;
                 city.buildings += 1;
+            }
+            break;
+
+
+        case 4: //Build an office tower
+            if ((SC_OfficeTower_PF.pointsB <= player.mat_sand) && (SC_OfficeTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_OfficeTower_PF;
+                player.mat_sand -= SC_OfficeTower_PF.pointsB; // source the raw materials for this with sand
+                player.mat_shells -= SC_OfficeTower_PF.pointsC; // pay for this build with shells
+                city.residents += 0;
+                city.buildings += 1;
+            }
+            break;
+
+        case 5: //Build an office tower
+            if ((SC_OfficeTower_PF.pointsB <= player.mat_sand) && (SC_OfficeTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_OfficeTower_PF;
+                player.mat_sand -= SC_OfficeTower_PF.pointsB; // source the raw materials for this with sand
+                player.mat_shells -= SC_OfficeTower_PF.pointsC; // pay for this build with shells
+                city.residents += 0;
+                city.buildings += 1;
+            }
+            break;
+
+            //
+        case 6: //Build a high density residential tower
+            if ((SC_ResidentialTower_PF.pointsB <= player.mat_sand) && (SC_ResidentialTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_ResidentialTower_PF;
+                player.mat_sand -= SC_ResidentialTower_PF.pointsB; // source the raw materials for this with sand
+                player.mat_shells -= SC_ResidentialTower_PF.pointsC; // pay for this build with shells
+                city.residents += 10;
+                city.buildings += 3;
             }
             break;
 

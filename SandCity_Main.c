@@ -93,32 +93,36 @@ GLfloat light_diffuse[2][4] = {
 
 
 
-u8 textureTotal = 19; //used for loops
-GLuint textures[19];
-static sprite_t* sprites[19];
+u8 textureTotal = 20; //used for loops
+GLuint textures[20];
+static sprite_t* sprites[20];
 
 
-static const char *texture_path[19] = {
+static const char *texture_path[20] = {
     "rom:/circle0.sprite",
     "rom:/diamond0.sprite",
     "rom:/pentagon0.sprite",
     "rom:/triangle0.sprite",    
     "rom:/Grass-Texture-1-Dirt.ci4.sprite",
-    "rom:/Sand-Texture-4-Hill.ci4.sprite",
+    "rom:/Sand-Texture-4-Hill.ci4.sprite", //5
     "rom:/Grass-Texture-2.ci4.sprite",
     "rom:/Sand-Texture-1.ci4.sprite",
     "rom:/Sand-Texture-2-Wet.ci4.sprite",
     "rom:/Sand-Texture-3-Stones.ci4.sprite",
-    "rom:/water_grey1.ci4.sprite",
+    "rom:/water_grey1.ci4.sprite", //10
     "rom:/beach_umbrella_tarp.ci4.sprite",
     "rom:/beach_umbrella_pole.ci4.sprite",
     "rom:/Beach_chair_cloth.ci4.sprite",    
     "rom:/beach_chair_legs_light.ci4.sprite",
-    "rom:/beach_chair_legs_dark.ci4.sprite",
+    "rom:/beach_chair_legs_dark.ci4.sprite", //15
     "rom:/Crab_Shell.ci4.sprite",
     "rom:/Crab_Legs.ci4.sprite",
     "rom:/Crab_Legs_2.ci4.sprite",
+    "rom:/Beach_Reflection_Daytime.ci4.sprite",
+    //20
 };
+
+
 
 GLuint uiTextures[1];
 static sprite_t* uiSprites[1];
@@ -198,7 +202,7 @@ static const char* wave_texture_path[52] = {
 
 extern void SC_Events_Init();
 extern void SC_Events_Update();
-void setup()
+void SC_Setup()
 {
 
     
@@ -206,10 +210,13 @@ void setup()
     //----- Note ------------------------- NGin64 General Setup ------------------------------------
     gin64_ProjSetup(); //Initial NGin64 Project Setup. (Many of these settings can be adjusted at run time if needed)
 
-    gin64_Controller_Init(); 
-    gin64_InitDebug(); //Set up on screen debug elements
+    gin64_Controller_Init(); // Note - set up controller input
 
-    gin64_CamInit();   
+    gin64_InitDebug(); //Note - Set up on screen debug elements
+
+    gin64_CamInit(); //Note - Set up camera functions   
+
+    gin64_XMAudio_Init(); //Note - Set up audio functions
     //----------------------------------------------------------------------------------------------
 
 
@@ -334,24 +341,24 @@ void render()
 
 extern void SC_Events_Update();
 
+
+
+int mainTickRate = 30;
+int prevTickRate = 20;
+double previousTick = 0;
+double currentTick = 0;
+int checkFPS = 30;
+int fpsCheckCounter = 0;
+
+
 int main()
 {
-
-    /**/
-   // debug_init_isviewer();
-  //  debug_init_usblog();
-
-   // dfs_init(DFS_DEFAULT_LOCATION);
-
-    ////display_init(RESOLUTION_320x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE_FETCH_ALWAYS);
-    //display_init(RESOLUTION_320x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE);
-
 
     gin64_DisplaySetup();
 
     gl_init();
 
-    setup();
+    SC_Setup();
 
 #if DEBUG_RDP
     rdpq_debug_start();
@@ -362,26 +369,123 @@ int main()
     gin64_InitTimers();
     controller_init();
 
+    bool testOnce = true;
+
 #if !DEBUG_RDP
     while (1)
 #endif
     {
         gin64_SetDeltaTime();
         gin64_Time();
-       
+        
+
+        
 
 
         gin64_Controller_Update();
-        
+        gin64_XMAudio_Song();
         gin64_Events_Update();
+       // gin64_XMAudio_Song();
 
        // SC_Events_Update();
 
         ngin64_UpdateCameraPosition();
 
-        
-        render();
+        //gin64_XMAudio_Song();
 
+
+
+       
+        int tempFPSCheck = gin64_GetFPS();
+
+        if (tempFPSCheck <= checkFPS && fpsCheckCounter < 10) {
+
+            fpsCheckCounter += 1;
+        }
+
+        else if (fpsCheckCounter >= 10) {
+            checkFPS = tempFPSCheck;
+            fpsCheckCounter = 0;
+        }
+
+
+        //render();
+        gin64_XMAudio_Song();
+        
+        currentTick = gin64_GetPlaybackTick(mainTickRate);
+
+        if (previousTick < currentTick) {
+
+            previousTick = currentTick;
+            render();
+
+        }
+
+        
+       gin64_XMAudio_Song();
+
+
+
+
+
+
+
+
+
+       /*
+        if (checkFPS >= 41)
+            mainTickRate = 40;
+        else if (checkFPS >= 31)
+            mainTickRate = 30;
+        else if (checkFPS >= 21)
+            mainTickRate = 20;
+        else if (checkFPS >= 16)
+            mainTickRate = 15;
+            */
+        /*
+        if (prevTickRate != mainTickRate) {
+
+            prevTickRate = gin64_GetPlaybackTick(mainTickRate);
+        }
+
+        currentTick = gin64_GetPlaybackTick(mainTickRate);
+
+        if (previousTick < currentTick) {
+
+            previousTick = currentTick;
+            render();
+
+        }
+        */
+
+        //gin64_XMAudio_Song();
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*
+        if(testOnce == true){
+            render();
+            testOnce = false;
+        }
+
+        else if (testOnce == false) {
+
+            testOnce = true;
+        }
+        */
+
+
+        //gin64_XMAudio_Song();
         SC_Interface_Update();
         
 

@@ -1082,36 +1082,50 @@ void SC_WatchTower_DL_LOD1() {
 
 
 
-void SC_WatchTower_DL_LOD2() {
+void SC_WatchTower_DL_LOD2_TEST() {
 
     
-    glEnable(GL_CULL_FACE);
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glEnableClientState(GL_COLOR_ARRAY);
-    
+    //glEnable(GL_CULL_FACE);
 
     glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_WatchTower_LOD2));
     glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_WatchTower_LOD2));
     glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_WatchTower_LOD2));
     glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_WatchTower_LOD2));
 
-    glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
+   // glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
     glDrawElements(GL_TRIANGLES, sizeof(poly_WatchTower_LOD2_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_WatchTower_LOD2_Beach);
-
-    
-    glDisableClientState(GL_VERTEX_ARRAY);
-    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_COLOR_ARRAY);
-    
 
     gin64_UpdateTriCounter(11);
 }
 
+void SC_WatchTower_DL_LOD2() {
 
+
+    glEnable(GL_CULL_FACE);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+
+    glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_WatchTower_LOD2));
+    glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_WatchTower_LOD2));
+    glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_WatchTower_LOD2));
+    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_WatchTower_LOD2));
+
+     glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_WatchTower_LOD2_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_WatchTower_LOD2_Beach);
+
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+
+
+    gin64_UpdateTriCounter(11);
+}
 
 
 //extern GLfloat light_pos[2][4];
@@ -2664,6 +2678,108 @@ static const uint16_t poly_ResidentialTower_LOD2_Glass[] = {
 
 };
 
+
+void SC_ResidentialTower_DL_LOD0() {
+
+    glEnable(GL_CULL_FACE);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+
+    glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_ResidentialTower_LOD0));
+    glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_ResidentialTower_LOD0));
+    glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_ResidentialTower_LOD0));
+    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_ResidentialTower_LOD0));
+
+    glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_ResidentialTower_LOD0_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_ResidentialTower_LOD0_Beach);
+
+    glBindTexture(GL_TEXTURE_2D, textures[8]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_ResidentialTower_LOD0_Glass) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_ResidentialTower_LOD0_Glass);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+
+
+    gin64_UpdateTriCounter(40);
+}
+
+
+void SC_ResidentialTower_DL_LOD1() {
+
+    glEnable(GL_CULL_FACE);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+
+    glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_ResidentialTower_LOD1));
+    glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_ResidentialTower_LOD1));
+    glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_ResidentialTower_LOD1));
+    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_ResidentialTower_LOD1));
+
+    glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_ResidentialTower_LOD0_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_ResidentialTower_LOD1_Beach);
+
+    glBindTexture(GL_TEXTURE_2D, textures[8]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_ResidentialTower_LOD1_Glass) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_ResidentialTower_LOD1_Glass);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+
+
+    gin64_UpdateTriCounter(40);
+}
+
+
+
+void SC_ResidentialTower_DL_LOD2() {
+
+    glEnable(GL_CULL_FACE);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+
+    glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_ResidentialTower_LOD2));
+    glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_ResidentialTower_LOD2));
+    glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_ResidentialTower_LOD2));
+    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_ResidentialTower_LOD2));
+
+    glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_ResidentialTower_LOD2_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_ResidentialTower_LOD2_Beach);
+
+    glBindTexture(GL_TEXTURE_2D, textures[19]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_ResidentialTower_LOD2_Glass) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_ResidentialTower_LOD2_Glass);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+
+
+    gin64_UpdateTriCounter(40);
+}
+
+
+
+
+
+
+
+
+
 //--------------------------------------- OfficeTower_LOD0 ---------------------------------------
    //ACTIVE OBJ MATERIALS: 
 
@@ -2681,58 +2797,55 @@ static const uint16_t poly_ResidentialTower_LOD2_Glass[] = {
    //>          - matTextureSize(x,y):  (64, 64) 
    //>------------------------------ 
 
-
 static const gl_XP64_Vert vert_OfficeTower_LOD0[] = {
-      {.pos = {-0.56, 0.23, 3.41}, .uv = {1.91, -0.87}, .vNormal = { -120.00, -4.00, 39.00}, .vColor = { 175, 131, 126, 255 } },
-      {.pos = {-0.00, -0.38, 3.41}, .uv = {2.36, -0.97}, .vNormal = { 0.00, -117.00, 49.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.00, 0.54, 4.12}, .uv = {1.91, -0.87}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {0.67, 0.23, 0.04}, .uv = {0.39, 0.72}, .vNormal = { 123.00, 29.00, 4.00}, .vColor = { 162, 127, 124, 255 } },
-      {.pos = {0.40, -0.72, 0.51}, .uv = {0.12, 0.42}, .vNormal = { 79.00, -82.00, 55.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {0.40, -0.72, 0.04}, .uv = {0.19, 0.77}, .vNormal = { 76.00, -100.00, 12.00}, .vColor = { 166, 133, 128, 255 } },
-      {.pos = {-0.00, 0.96, 0.04}, .uv = {1.29, 0.52}, .vNormal = { 0.00, 125.00, 17.00}, .vColor = { 138, 94, 98, 255 } },
-      {.pos = {0.63, 0.23, 0.91}, .uv = {0.76, 0.24}, .vNormal = { 125.00, 12.00, 17.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {0.67, 0.23, 0.04}, .uv = {0.84, 0.62}, .vNormal = { 123.00, 29.00, 4.00}, .vColor = { 162, 127, 124, 255 } },
-      {.pos = {-0.00, 0.83, 3.41}, .uv = {1.02, -0.67}, .vNormal = { 0.00, 124.00, 25.00}, .vColor = { 189, 165, 158, 255 } },
-      {.pos = {-0.56, 0.23, 3.41}, .uv = {1.47, -0.77}, .vNormal = { -120.00, -4.00, 39.00}, .vColor = { 175, 131, 126, 255 } },
-      {.pos = {-0.00, 0.54, 4.12}, .uv = {1.02, -0.67}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.00, -0.38, 3.25}, .uv = {-0.31, -0.31}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {0.54, 0.23, 3.41}, .uv = {0.13, -0.46}, .vNormal = { 120.00, -4.00, 39.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.00, -0.38, 3.41}, .uv = {-0.32, -0.36}, .vNormal = { 0.00, -117.00, 49.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.00, -0.74, 0.76}, .uv = {2.55, -0.12}, .vNormal = { 0.00, -76.00, 101.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.32, -1.02, 0.50}, .uv = {2.29, -0.07}, .vNormal = { -67.00, -17.00, 105.00}, .vColor = { 164, 127, 125, 255 } },
-      {.pos = {-0.00, -1.15, 0.69}, .uv = {2.55, -0.12}, .vNormal = { 0.00, -18.00, 125.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.00, -0.74, 0.76}, .uv = {-0.13, 0.48}, .vNormal = { 0.00, -76.00, 101.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {0.32, -1.02, 0.50}, .uv = {0.12, 0.42}, .vNormal = { 67.00, -17.00, 106.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.00, 0.84, 3.25}, .uv = {1.03, -0.61}, .vNormal = { 0.00, 126.00, 4.00}, .vColor = { 187, 162, 155, 255 } },
-      {.pos = {0.54, 0.23, 3.41}, .uv = {0.57, -0.56}, .vNormal = { 120.00, -4.00, 39.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {0.55, 0.23, 3.24}, .uv = {0.59, -0.51}, .vNormal = { 126.00, 0.00, 4.00}, .vColor = { 215, 199, 190, 255 } },
-      {.pos = {-0.00, 0.54, 4.12}, .uv = {0.57, -0.56}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.00, 0.54, 4.12}, .uv = {-0.32, -0.36}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.65, 0.23, 0.04}, .uv = {1.73, 0.42}, .vNormal = { -67.00, 16.00, 106.00}, .vColor = { 136, 91, 96, 255 } },
-      {.pos = {-0.00, 0.92, 0.91}, .uv = {1.20, 0.14}, .vNormal = { 0.00, 126.00, 5.00}, .vColor = { 154, 117, 117, 255 } },
-      {.pos = {-0.40, -0.72, 0.04}, .uv = {2.63, 0.22}, .vNormal = { -37.00, -49.00, 110.00}, .vColor = { 133, 88, 93, 255 } },
-      {.pos = {-0.40, -0.72, 0.51}, .uv = {2.29, -0.07}, .vNormal = { -80.00, -81.00, 54.00}, .vColor = { 164, 127, 125, 255 } },
-      {.pos = {-0.62, 0.23, 0.91}, .uv = {2.22, -0.23}, .vNormal = { -125.00, 12.00, 15.00}, .vColor = { 152, 108, 109, 255 } },
-      {.pos = {-0.00, -0.38, 3.25}, .uv = {2.37, -0.92}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.56, 0.23, 3.25}, .uv = {1.94, -0.82}, .vNormal = { -126.00, 0.00, 3.00}, .vColor = { 173, 129, 125, 255 } },
-      {.pos = {-0.00, -0.45, 0.91}, .uv = {-0.13, 0.48}, .vNormal = { 0.00, -95.00, 83.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {0.63, 0.23, 0.91}, .uv = {0.13, 0.24}, .vNormal = { 125.00, 12.00, 17.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.65, 0.23, 0.04}, .uv = {2.18, 0.32}, .vNormal = { -67.00, 16.00, 106.00}, .vColor = { 136, 91, 96, 255 } },
-      {.pos = {-0.40, -0.72, 0.04}, .uv = {2.38, 0.27}, .vNormal = { -37.00, -49.00, 110.00}, .vColor = { 137, 93, 97, 255 } },
-      {.pos = {-0.00, -0.45, 0.91}, .uv = {2.55, -0.12}, .vNormal = { 0.00, -95.00, 83.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-1.46, -0.17, 0.04}, .uv = {1.73, 0.42}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 196, 174, 161, 255 } },
-      {.pos = {-0.99, -0.43, 0.04}, .uv = {2.38, 0.27}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 153, 116, 115, 255 } },
-      {.pos = {-0.71, -1.04, 0.04}, .uv = {2.38, 0.27}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 152, 116, 115, 255 } },
-      {.pos = {-0.00, -0.45, 0.91}, .uv = {2.53, -0.24}, .vNormal = { 0.00, -95.00, 83.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.56, 0.23, 3.25}, .uv = {1.48, -0.71}, .vNormal = { -126.00, 0.00, 3.00}, .vColor = { 173, 129, 125, 255 } },
-      {.pos = {-0.62, 0.23, 0.91}, .uv = {1.65, 0.05}, .vNormal = { -125.00, 12.00, 15.00}, .vColor = { 148, 104, 105, 255 } },
-      {.pos = {-0.00, -0.45, 0.91}, .uv = {-0.16, 0.37}, .vNormal = { 0.00, -95.00, 83.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {0.55, 0.23, 3.24}, .uv = {0.13, -0.41}, .vNormal = { 126.00, 0.00, 4.00}, .vColor = { 215, 199, 189, 255 } },
-      {.pos = {-0.40, -0.72, 0.04}, .uv = {-0.05, 0.82}, .vNormal = { -37.00, -49.00, 110.00}, .vColor = { 133, 88, 93, 255 } },
-      {.pos = {-1.46, -0.17, 0.04}, .uv = {2.18, 0.32}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 196, 174, 161, 255 } },
-      {.pos = {-1.52, -0.50, 0.04}, .uv = {2.38, 0.27}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 202, 182, 168, 255 } },
-      {.pos = {-0.00, -1.15, 0.69}, .uv = {-0.13, 0.48}, .vNormal = { 0.00, -18.00, 125.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.62, 0.23, 0.91}, .uv = {2.10, -0.06}, .vNormal = { -125.00, 12.00, 15.00}, .vColor = { 148, 104, 105, 255 } },
+      {.pos = {-0.56, 0.23, 3.41}, .uv = {0.77, -0.33}, .vNormal = { -120.00, -4.00, 39.00}, .vColor = { 175, 131, 126, 255 } },
+      {.pos = {-0.00, -0.38, 3.41}, .uv = {0.70, -0.06}, .vNormal = { 0.00, -117.00, 49.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.00, 0.54, 4.12}, .uv = {0.87, -0.26}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {0.67, 0.23, 0.04}, .uv = {0.45, -0.36}, .vNormal = { 123.00, 29.00, 4.00}, .vColor = { 162, 127, 124, 255 } },
+      {.pos = {0.40, -0.72, 0.51}, .uv = {0.62, -0.59}, .vNormal = { 79.00, -82.00, 55.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {0.40, -0.72, 0.04}, .uv = {0.46, -0.55}, .vNormal = { 76.00, -100.00, 12.00}, .vColor = { 166, 133, 128, 255 } },
+      {.pos = {-0.00, 0.96, 0.04}, .uv = {0.27, -0.31}, .vNormal = { 0.00, 125.00, 17.00}, .vColor = { 138, 94, 98, 255 } },
+      {.pos = {0.63, 0.23, 0.91}, .uv = {0.64, -0.00}, .vNormal = { 125.00, 12.00, 17.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {-0.00, 0.83, 3.41}, .uv = {0.94, -0.34}, .vNormal = { 0.00, 124.00, 25.00}, .vColor = { 189, 165, 158, 255 } },
+      {.pos = {-0.00, -0.38, 3.25}, .uv = {0.72, -0.00}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {0.54, 0.23, 3.41}, .uv = {0.95, -0.17}, .vNormal = { 120.00, -4.00, 39.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {-0.00, -0.74, 0.76}, .uv = {0.55, 0.03}, .vNormal = { 0.00, -76.00, 101.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.32, -1.02, 0.50}, .uv = {0.55, 0.24}, .vNormal = { -67.00, -17.00, 105.00}, .vColor = { 164, 127, 125, 255 } },
+      {.pos = {-0.00, -1.15, 0.69}, .uv = {0.59, 0.13}, .vNormal = { 0.00, -18.00, 125.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.00, -0.74, 0.76}, .uv = {0.11, 0.03}, .vNormal = { 0.00, -76.00, 101.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {0.32, -1.02, 0.50}, .uv = {0.11, 0.24}, .vNormal = { 67.00, -17.00, 106.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {0.40, -0.72, 0.51}, .uv = {0.14, 0.20}, .vNormal = { 79.00, -82.00, 55.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {-0.00, 0.84, 3.25}, .uv = {0.98, -0.38}, .vNormal = { 0.00, 126.00, 4.00}, .vColor = { 187, 162, 155, 255 } },
+      {.pos = {0.55, 0.23, 3.24}, .uv = {1.00, -0.14}, .vNormal = { 126.00, 0.00, 4.00}, .vColor = { 215, 199, 190, 255 } },
+      {.pos = {-0.65, 0.23, 0.04}, .uv = {0.24, -0.44}, .vNormal = { -67.00, 16.00, 106.00}, .vColor = { 136, 91, 96, 255 } },
+      {.pos = {-0.00, 0.92, 0.91}, .uv = {0.09, -0.07}, .vNormal = { 0.00, 126.00, 5.00}, .vColor = { 154, 117, 117, 255 } },
+      {.pos = {-0.40, -0.72, 0.04}, .uv = {0.31, -0.63}, .vNormal = { -37.00, -49.00, 110.00}, .vColor = { 133, 88, 93, 255 } },
+      {.pos = {-0.00, -0.74, 0.76}, .uv = {0.20, -0.81}, .vNormal = { 0.00, -76.00, 101.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.40, -0.72, 0.51}, .uv = {0.20, -0.68}, .vNormal = { -80.00, -81.00, 54.00}, .vColor = { 164, 127, 125, 255 } },
+      {.pos = {-0.62, 0.23, 0.91}, .uv = {0.43, -0.04}, .vNormal = { -125.00, 12.00, 15.00}, .vColor = { 152, 108, 109, 255 } },
+      {.pos = {-0.00, -0.38, 3.25}, .uv = {0.51, -1.04}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.56, 0.23, 3.25}, .uv = {0.42, -1.02}, .vNormal = { -126.00, 0.00, 3.00}, .vColor = { 173, 129, 125, 255 } },
+      {.pos = {-0.00, -0.45, 0.91}, .uv = {0.14, -0.07}, .vNormal = { 0.00, -95.00, 83.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {0.63, 0.23, 0.91}, .uv = {0.23, -0.04}, .vNormal = { 125.00, 12.00, 17.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {-0.40, -0.72, 0.04}, .uv = {0.31, -0.63}, .vNormal = { -37.00, -49.00, 110.00}, .vColor = { 137, 93, 97, 255 } },
+      {.pos = {-0.00, -0.45, 0.91}, .uv = {0.53, -0.07}, .vNormal = { 0.00, -95.00, 83.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.40, -0.72, 0.51}, .uv = {0.52, 0.20}, .vNormal = { -80.00, -81.00, 54.00}, .vColor = { 164, 127, 125, 255 } },
+      {.pos = {-0.00, -0.74, 0.76}, .uv = {0.64, -0.80}, .vNormal = { 0.00, -76.00, 101.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-1.46, -0.17, 0.04}, .uv = {0.27, -0.53}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 196, 174, 161, 255 } },
+      {.pos = {-0.99, -0.43, 0.04}, .uv = {0.27, -0.53}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 153, 116, 115, 255 } },
+      {.pos = {-0.71, -1.04, 0.04}, .uv = {0.28, -0.54}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 152, 116, 115, 255 } },
+      {.pos = {-0.56, 0.23, 3.25}, .uv = {0.72, -0.38}, .vNormal = { -126.00, 0.00, 3.00}, .vColor = { 173, 129, 125, 255 } },
+      {.pos = {-0.62, 0.23, 0.91}, .uv = {0.43, -0.04}, .vNormal = { -125.00, 12.00, 15.00}, .vColor = { 148, 104, 105, 255 } },
+      {.pos = {-0.00, 0.84, 3.25}, .uv = {0.33, -1.01}, .vNormal = { 0.00, 126.00, 4.00}, .vColor = { 187, 162, 155, 255 } },
+      {.pos = {-0.00, 0.92, 0.91}, .uv = {0.33, -0.03}, .vNormal = { 0.00, 126.00, 5.00}, .vColor = { 154, 117, 117, 255 } },
+      {.pos = {0.55, 0.23, 3.24}, .uv = {0.25, -1.02}, .vNormal = { 126.00, 0.00, 4.00}, .vColor = { 215, 199, 190, 255 } },
+      {.pos = {0.55, 0.23, 3.24}, .uv = {0.25, -1.02}, .vNormal = { 126.00, 0.00, 4.00}, .vColor = { 215, 199, 189, 255 } },
+      {.pos = {-0.00, -0.38, 3.25}, .uv = {0.16, -1.05}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-1.52, -0.50, 0.04}, .uv = {0.27, -0.54}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 202, 182, 168, 255 } },
+      {.pos = {0.55, 0.23, 3.24}, .uv = {1.00, -0.14}, .vNormal = { 126.00, 0.00, 4.00}, .vColor = { 215, 199, 189, 255 } },
+      {.pos = {-0.00, -1.15, 0.69}, .uv = {0.08, 0.13}, .vNormal = { 0.00, -18.00, 125.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.62, 0.23, 0.91}, .uv = {0.00, -0.41}, .vNormal = { -125.00, 12.00, 15.00}, .vColor = { 148, 104, 105, 255 } },
+      {.pos = {-0.00, -0.38, 3.25}, .uv = {0.64, -0.08}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
 
 };
 
@@ -2746,34 +2859,34 @@ static const uint16_t poly_OfficeTower_LOD0_Beach[] = {
 
           0, 1, 2,
           3, 4, 5,
-          6, 7, 8,
-          9, 10, 11,
-          12, 13, 14,
-          20, 21, 22,
-          21, 9, 23,
-          14, 13, 24,
-          25, 26, 6,
-          27, 15, 28,
-          5, 4, 18,
-          31, 1, 0,
-          6, 26, 7,
-          20, 9, 21,
-          31, 30, 1,
-          28, 34, 35,
-          25, 6, 37,
-          41, 9, 20,
-          18, 45, 5,
-          45, 39, 5,
-          3, 33, 4,
-          12, 44, 13,
-          25, 42, 26,
-          28, 49, 34,
-          41, 10, 9,
-          35, 34, 38,
-          35, 38, 39,
-          38, 46, 47,
-          39, 38, 47,
-          38, 34, 46,
+          6, 7, 3,
+          8, 0, 2,
+          9, 10, 1,
+          17, 10, 18,
+          10, 8, 2,
+          1, 10, 2,
+          19, 20, 6,
+          21, 22, 23,
+          23, 19, 29,
+          3, 7, 4,
+          6, 20, 7,
+          17, 8, 10,
+          5, 4, 32,
+          19, 6, 33,
+          29, 19, 34,
+          29, 34, 35,
+          36, 8, 17,
+          36, 1, 0,
+          32, 21, 5,
+          21, 35, 5,
+          34, 19, 33,
+          9, 44, 10,
+          19, 46, 20,
+          23, 46, 19,
+          36, 0, 8,
+          36, 47, 1,
+          34, 33, 43,
+          35, 34, 43,
 
 };
 
@@ -2781,27 +2894,27 @@ static const uint16_t poly_OfficeTower_LOD0_Beach[] = {
 static const uint16_t poly_OfficeTower_LOD0_Glass[] = {
     //>------------------------------
        //>     + matName: Glass 
-       //>          - matTextureName: Beach Umbrella Textures 
-       //>          - matTextureSize(x,y):  (64, 64) 
+       //>          - matTextureName: Beach_Reflection_Daytime 
+       //>          - matTextureSize(x,y):  (128, 32) 
 
     //>------------------------------
 
-          15, 16, 17,
-          18, 19, 4,
-          29, 30, 31,
-          26, 22, 7,
-          15, 28, 16,
-          26, 20, 22,
-          32, 4, 33,
-          36, 28, 15,
-          4, 32, 18,
-          40, 29, 28,
-          42, 20, 26,
-          43, 44, 12,
-          18, 48, 19,
-          29, 40, 30,
-          42, 41, 20,
-          43, 33, 44,
+          11, 12, 13,
+          14, 15, 16,
+          24, 25, 26,
+          27, 16, 28,
+          30, 31, 11,
+          16, 27, 14,
+          30, 24, 31,
+          11, 31, 12,
+          24, 30, 25,
+          39, 40, 28,
+          27, 41, 42,
+          14, 45, 15,
+          37, 26, 38,
+          27, 28, 41,
+          37, 38, 39,
+          39, 38, 40,
 
 };
 
@@ -2818,54 +2931,55 @@ static const uint16_t poly_OfficeTower_LOD0_Glass[] = {
    //>          - matTextureSize(x,y):  (64, 64) 
    //>------------------------------ 
    //>     > matName: Glass 
-   //>          - matTextureName: Beach Umbrella Textures 
-   //>          - matTextureSize(x,y):  (64, 64) 
+   //>          - matTextureName: Beach_Reflection_Daytime 
+   //>          - matTextureSize(x,y):  (128, 32) 
    //>------------------------------ 
 
 
 static const gl_XP64_Vert vert_OfficeTower_LOD1[] = {
-      {.pos = {-0.56, 0.23, 3.41}, .uv = {1.91, -0.87}, .vNormal = { -120.00, 0.00, 40.00}, .vColor = { 175, 131, 126, 255 } },
-      {.pos = {-0.00, -0.38, 3.41}, .uv = {2.36, -0.97}, .vNormal = { 0.00, -115.00, 52.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.00, 0.68, 4.12}, .uv = {1.91, -0.87}, .vNormal = { 0.00, 59.00, 112.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {0.67, 0.23, 0.04}, .uv = {0.39, 0.72}, .vNormal = { 123.00, 29.00, 4.00}, .vColor = { 162, 127, 124, 255 } },
-      {.pos = {0.40, -0.72, 0.51}, .uv = {0.12, 0.42}, .vNormal = { 62.00, -86.00, 69.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {0.40, -0.72, 0.04}, .uv = {0.19, 0.77}, .vNormal = { 76.00, -100.00, 14.00}, .vColor = { 166, 133, 128, 255 } },
-      {.pos = {-0.00, 0.96, 0.04}, .uv = {1.20, 0.14}, .vNormal = { 0.00, 125.00, 17.00}, .vColor = { 154, 117, 117, 255 } },
-      {.pos = {0.63, 0.23, 0.91}, .uv = {0.76, 0.24}, .vNormal = { 125.00, 12.00, 17.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {0.67, 0.23, 0.04}, .uv = {0.84, 0.62}, .vNormal = { 123.00, 29.00, 4.00}, .vColor = { 162, 127, 124, 255 } },
-      {.pos = {-0.00, -0.38, 3.25}, .uv = {-0.31, -0.31}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {0.54, 0.23, 3.41}, .uv = {0.13, -0.46}, .vNormal = { 120.00, 0.00, 40.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.00, -0.38, 3.41}, .uv = {-0.32, -0.36}, .vNormal = { 0.00, -115.00, 52.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.32, -1.02, 0.50}, .uv = {-0.13, 0.48}, .vNormal = { 0.00, -2.00, 126.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {0.32, -1.02, 0.50}, .uv = {0.12, 0.42}, .vNormal = { 0.00, -2.00, 126.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {0.55, 0.23, 3.24}, .uv = {0.59, -0.51}, .vNormal = { 126.00, 5.00, 5.00}, .vColor = { 215, 199, 190, 255 } },
-      {.pos = {-0.00, 0.68, 4.12}, .uv = {1.02, -0.67}, .vNormal = { 0.00, 59.00, 112.00}, .vColor = { 189, 165, 158, 255 } },
-      {.pos = {0.54, 0.23, 3.41}, .uv = {0.57, -0.56}, .vNormal = { 120.00, 0.00, 40.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.00, 0.68, 4.12}, .uv = {-0.32, -0.36}, .vNormal = { 0.00, 59.00, 112.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.65, 0.23, 0.04}, .uv = {1.73, 0.42}, .vNormal = { -67.00, 16.00, 106.00}, .vColor = { 136, 91, 96, 255 } },
-      {.pos = {-0.62, 0.23, 0.91}, .uv = {1.65, 0.05}, .vNormal = { -125.00, 11.00, 15.00}, .vColor = { 148, 104, 105, 255 } },
-      {.pos = {-0.00, 0.96, 0.04}, .uv = {1.29, 0.52}, .vNormal = { 0.00, 125.00, 17.00}, .vColor = { 138, 94, 98, 255 } },
-      {.pos = {-0.62, 0.23, 0.91}, .uv = {2.22, -0.23}, .vNormal = { -125.00, 11.00, 15.00}, .vColor = { 152, 108, 109, 255 } },
-      {.pos = {-0.00, -0.38, 3.25}, .uv = {2.37, -0.92}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.56, 0.23, 3.25}, .uv = {1.94, -0.82}, .vNormal = { -126.00, 5.00, 5.00}, .vColor = { 173, 129, 125, 255 } },
-      {.pos = {-0.00, -0.45, 0.91}, .uv = {-0.13, 0.48}, .vNormal = { 0.00, -105.00, 71.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {0.63, 0.23, 0.91}, .uv = {0.13, 0.24}, .vNormal = { 125.00, 12.00, 17.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.40, -0.72, 0.51}, .uv = {2.29, -0.07}, .vNormal = { -62.00, -86.00, 68.00}, .vColor = { 162, 124, 123, 255 } },
-      {.pos = {-0.65, 0.23, 0.04}, .uv = {2.18, 0.32}, .vNormal = { -67.00, 16.00, 106.00}, .vColor = { 136, 91, 96, 255 } },
-      {.pos = {-0.40, -0.72, 0.04}, .uv = {2.38, 0.27}, .vNormal = { -37.00, -49.00, 110.00}, .vColor = { 137, 93, 97, 255 } },
-      {.pos = {-0.40, -0.72, 0.51}, .uv = {-0.13, 0.48}, .vNormal = { -62.00, -86.00, 68.00}, .vColor = { 162, 124, 123, 255 } },
-      {.pos = {-1.49, -0.16, 0.04}, .uv = {1.73, 0.42}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 202, 182, 168, 255 } },
-      {.pos = {-1.49, -0.16, 0.04}, .uv = {2.38, 0.27}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 202, 182, 168, 255 } },
-      {.pos = {-0.71, -1.04, 0.04}, .uv = {2.38, 0.27}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 152, 116, 115, 255 } },
-      {.pos = {-0.00, -0.45, 0.91}, .uv = {2.53, -0.24}, .vNormal = { 0.00, -105.00, 71.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.00, 0.68, 4.12}, .uv = {1.03, -0.61}, .vNormal = { 0.00, 59.00, 112.00}, .vColor = { 187, 162, 155, 255 } },
-      {.pos = {-0.56, 0.23, 3.25}, .uv = {1.48, -0.71}, .vNormal = { -126.00, 5.00, 5.00}, .vColor = { 173, 129, 125, 255 } },
-      {.pos = {-0.56, 0.23, 3.41}, .uv = {1.47, -0.77}, .vNormal = { -120.00, 0.00, 40.00}, .vColor = { 175, 131, 126, 255 } },
-      {.pos = {-0.00, -0.45, 0.91}, .uv = {-0.16, 0.37}, .vNormal = { 0.00, -105.00, 71.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {0.55, 0.23, 3.24}, .uv = {0.13, -0.41}, .vNormal = { 126.00, 5.00, 5.00}, .vColor = { 215, 199, 189, 255 } },
-      {.pos = {-0.40, -0.72, 0.04}, .uv = {-0.05, 0.82}, .vNormal = { -37.00, -49.00, 110.00}, .vColor = { 133, 88, 93, 255 } },
-      {.pos = {-1.52, -0.50, 0.04}, .uv = {2.38, 0.27}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 202, 182, 168, 255 } },
-      {.pos = {-0.62, 0.23, 0.91}, .uv = {2.10, -0.06}, .vNormal = { -125.00, 11.00, 15.00}, .vColor = { 148, 104, 105, 255 } },
+      {.pos = {-0.56, 0.23, 3.41}, .uv = {0.71, -0.09}, .vNormal = { -120.00, 0.00, 40.00}, .vColor = { 175, 131, 126, 255 } },
+      {.pos = {-0.00, -0.38, 3.41}, .uv = {0.94, -0.05}, .vNormal = { 0.00, -115.00, 52.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.00, 0.68, 4.12}, .uv = {0.68, -0.37}, .vNormal = { 0.00, 59.00, 112.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {0.67, 0.23, 0.04}, .uv = {0.49, -0.19}, .vNormal = { 123.00, 29.00, 4.00}, .vColor = { 162, 127, 124, 255 } },
+      {.pos = {0.40, -0.72, 0.51}, .uv = {0.40, -0.47}, .vNormal = { 62.00, -86.00, 69.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {0.40, -0.72, 0.04}, .uv = {0.31, -0.38}, .vNormal = { 76.00, -100.00, 14.00}, .vColor = { 166, 133, 128, 255 } },
+      {.pos = {-0.00, 0.96, 0.04}, .uv = {0.68, -0.00}, .vNormal = { 0.00, 125.00, 17.00}, .vColor = { 154, 117, 117, 255 } },
+      {.pos = {0.63, 0.23, 0.91}, .uv = {0.66, -0.35}, .vNormal = { 125.00, 12.00, 17.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {-0.00, -0.38, 3.25}, .uv = {1.00, -0.05}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {0.54, 0.23, 3.41}, .uv = {0.95, -0.29}, .vNormal = { 120.00, 0.00, 40.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {0.40, -0.72, 0.51}, .uv = {0.06, 0.18}, .vNormal = { 62.00, -86.00, 69.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {-0.32, -1.02, 0.50}, .uv = {-0.13, 0.11}, .vNormal = { 0.00, -2.00, 126.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {0.32, -1.02, 0.50}, .uv = {-0.01, 0.26}, .vNormal = { 0.00, -2.00, 126.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {0.55, 0.23, 3.24}, .uv = {1.00, -0.31}, .vNormal = { 126.00, 5.00, 5.00}, .vColor = { 215, 199, 190, 255 } },
+      {.pos = {-0.00, 0.68, 4.12}, .uv = {0.68, -0.37}, .vNormal = { 0.00, 59.00, 112.00}, .vColor = { 189, 165, 158, 255 } },
+      {.pos = {-0.65, 0.23, 0.04}, .uv = {0.37, -0.78}, .vNormal = { -67.00, 16.00, 106.00}, .vColor = { 136, 91, 96, 255 } },
+      {.pos = {-0.62, 0.23, 0.91}, .uv = {0.50, -0.53}, .vNormal = { -125.00, 11.00, 15.00}, .vColor = { 148, 104, 105, 255 } },
+      {.pos = {-0.00, 0.96, 0.04}, .uv = {0.68, -0.85}, .vNormal = { 0.00, 125.00, 17.00}, .vColor = { 138, 94, 98, 255 } },
+      {.pos = {-0.62, 0.23, 0.91}, .uv = {0.74, -0.10}, .vNormal = { -125.00, 11.00, 15.00}, .vColor = { 152, 108, 109, 255 } },
+      {.pos = {-0.00, -0.38, 3.25}, .uv = {0.90, -0.83}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.56, 0.23, 3.25}, .uv = {0.69, -0.80}, .vNormal = { -126.00, 5.00, 5.00}, .vColor = { 173, 129, 125, 255 } },
+      {.pos = {-0.00, -0.45, 0.91}, .uv = {0.04, -0.13}, .vNormal = { 0.00, -105.00, 71.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {0.63, 0.23, 0.91}, .uv = {0.28, -0.10}, .vNormal = { 125.00, 12.00, 17.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {-0.40, -0.72, 0.51}, .uv = {0.25, -0.45}, .vNormal = { -62.00, -86.00, 68.00}, .vColor = { 162, 124, 123, 255 } },
+      {.pos = {-0.40, -0.72, 0.04}, .uv = {0.16, -0.54}, .vNormal = { -37.00, -49.00, 110.00}, .vColor = { 137, 93, 97, 255 } },
+      {.pos = {-0.40, -0.72, 0.51}, .uv = {0.25, -0.62}, .vNormal = { -62.00, -86.00, 68.00}, .vColor = { 162, 124, 123, 255 } },
+      {.pos = {-0.40, -0.72, 0.51}, .uv = {-0.10, -0.00}, .vNormal = { -62.00, -86.00, 68.00}, .vColor = { 162, 124, 123, 255 } },
+      {.pos = {-1.49, -0.16, 0.04}, .uv = {0.07, -0.85}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 202, 182, 168, 255 } },
+      {.pos = {-0.71, -1.04, 0.04}, .uv = {0.04, -0.54}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 152, 116, 115, 255 } },
+      {.pos = {-0.00, -0.45, 0.91}, .uv = {0.97, -0.14}, .vNormal = { 0.00, -105.00, 71.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.40, -0.72, 0.51}, .uv = {0.97, 0.17}, .vNormal = { -62.00, -86.00, 68.00}, .vColor = { 162, 124, 123, 255 } },
+      {.pos = {-0.00, 0.68, 4.12}, .uv = {0.68, -0.37}, .vNormal = { 0.00, 59.00, 112.00}, .vColor = { 187, 162, 155, 255 } },
+      {.pos = {-0.56, 0.23, 3.25}, .uv = {0.68, -0.04}, .vNormal = { -126.00, 5.00, 5.00}, .vColor = { 173, 129, 125, 255 } },
+      {.pos = {-0.00, 0.96, 0.04}, .uv = {0.52, -0.04}, .vNormal = { 0.00, 125.00, 17.00}, .vColor = { 154, 117, 117, 255 } },
+      {.pos = {-0.00, 0.68, 4.12}, .uv = {0.50, -0.93}, .vNormal = { 0.00, 59.00, 112.00}, .vColor = { 187, 162, 155, 255 } },
+      {.pos = {0.55, 0.23, 3.24}, .uv = {0.31, -0.79}, .vNormal = { 126.00, 5.00, 5.00}, .vColor = { 215, 199, 190, 255 } },
+      {.pos = {0.55, 0.23, 3.24}, .uv = {0.31, -0.79}, .vNormal = { 126.00, 5.00, 5.00}, .vColor = { 215, 199, 189, 255 } },
+      {.pos = {-0.00, -0.38, 3.25}, .uv = {0.11, -0.82}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.40, -0.72, 0.04}, .uv = {0.16, -0.54}, .vNormal = { -37.00, -49.00, 110.00}, .vColor = { 133, 88, 93, 255 } },
+      {.pos = {-1.52, -0.50, 0.04}, .uv = {0.00, -0.80}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 202, 182, 168, 255 } },
+      {.pos = {0.55, 0.23, 3.24}, .uv = {1.00, -0.31}, .vNormal = { 126.00, 5.00, 5.00}, .vColor = { 215, 199, 189, 255 } },
+      {.pos = {-0.62, 0.23, 0.91}, .uv = {0.74, -0.10}, .vNormal = { -125.00, 11.00, 15.00}, .vColor = { 148, 104, 105, 255 } },
+      {.pos = {-0.00, -0.38, 3.25}, .uv = {0.94, -0.00}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
 
 };
 
@@ -2879,25 +2993,25 @@ static const uint16_t poly_OfficeTower_LOD1_Beach[] = {
 
           0, 1, 2,
           3, 4, 5,
-          6, 7, 8,
-          9, 10, 11,
-          14, 15, 16,
-          11, 10, 17,
-          18, 19, 20,
-          26, 27, 28,
-          5, 4, 29,
-          18, 20, 30,
-          28, 27, 31,
-          23, 1, 0,
-          3, 25, 4,
-          23, 22, 1,
-          28, 31, 32,
-          29, 39, 5,
-          39, 32, 5,
-          32, 31, 40,
-          9, 38, 10,
-          26, 41, 27,
-          34, 35, 36,
+          6, 7, 3,
+          8, 9, 1,
+          13, 14, 9,
+          1, 9, 2,
+          15, 16, 17,
+          23, 15, 24,
+          5, 4, 25,
+          15, 17, 27,
+          24, 15, 27,
+          24, 27, 28,
+          3, 7, 4,
+          23, 16, 15,
+          31, 32, 0,
+          32, 1, 0,
+          25, 38, 5,
+          38, 28, 5,
+          28, 27, 39,
+          8, 40, 9,
+          32, 42, 1,
 
 };
 
@@ -2905,24 +3019,24 @@ static const uint16_t poly_OfficeTower_LOD1_Beach[] = {
 static const uint16_t poly_OfficeTower_LOD1_Glass[] = {
     //>------------------------------
        //>     + matName: Glass 
-       //>          - matTextureName: Beach Umbrella Textures 
-       //>          - matTextureSize(x,y):  (64, 64) 
+       //>          - matTextureName: Beach_Reflection_Daytime 
+       //>          - matTextureSize(x,y):  (128, 32) 
 
     //>------------------------------
 
-          4, 12, 13,
-          21, 22, 23,
-          24, 4, 25,
-          4, 24, 29,
-          6, 14, 7,
-          4, 29, 12,
-          33, 21, 26,
-          6, 35, 34,
-          37, 38, 9,
-          21, 33, 22,
-          6, 19, 35,
-          6, 34, 14,
-          37, 25, 38,
+          10, 11, 12,
+          18, 19, 20,
+          21, 10, 22,
+          10, 21, 26,
+          29, 18, 30,
+          10, 26, 11,
+          18, 29, 19,
+          33, 20, 34,
+          33, 35, 22,
+          21, 36, 37,
+          33, 41, 20,
+          21, 22, 36,
+          33, 34, 35,
 
 };
 
@@ -2939,48 +3053,52 @@ static const uint16_t poly_OfficeTower_LOD1_Glass[] = {
    //>          - matTextureSize(x,y):  (64, 64) 
    //>------------------------------ 
    //>     > matName: Glass 
-   //>          - matTextureName: Beach Umbrella Textures 
-   //>          - matTextureSize(x,y):  (64, 64) 
+   //>          - matTextureName: Beach_Reflection_Daytime 
+   //>          - matTextureSize(x,y):  (128, 32) 
    //>------------------------------ 
 
 
 static const gl_XP64_Vert vert_OfficeTower_LOD2[] = {
-      {.pos = {-0.56, 0.23, 3.41}, .uv = {1.91, -0.87}, .vNormal = { -118.00, 0.00, 45.00}, .vColor = { 175, 131, 126, 255 } },
-      {.pos = {-0.00, -0.38, 3.41}, .uv = {2.36, -0.97}, .vNormal = { 0.00, -113.00, 56.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.00, 0.68, 3.97}, .uv = {1.91, -0.87}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {0.67, 0.23, 0.04}, .uv = {0.39, 0.72}, .vNormal = { 122.00, -33.00, 4.00}, .vColor = { 162, 127, 124, 255 } },
-      {.pos = {0.40, -0.72, 0.51}, .uv = {0.12, 0.42}, .vNormal = { 62.00, -86.00, 69.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {0.40, -0.72, 0.04}, .uv = {0.19, 0.77}, .vNormal = { 76.00, -100.00, 14.00}, .vColor = { 166, 133, 128, 255 } },
-      {.pos = {-0.00, -0.38, 3.25}, .uv = {-0.31, -0.31}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {0.54, 0.23, 3.41}, .uv = {0.13, -0.46}, .vNormal = { 118.00, 0.00, 45.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.00, -0.38, 3.41}, .uv = {-0.32, -0.36}, .vNormal = { 0.00, -113.00, 56.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.32, -1.02, 0.50}, .uv = {-0.13, 0.48}, .vNormal = { 0.00, -2.00, 126.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {0.32, -1.02, 0.50}, .uv = {0.12, 0.42}, .vNormal = { 0.00, -2.00, 126.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {0.55, 0.23, 3.24}, .uv = {0.59, -0.51}, .vNormal = { 126.00, 7.00, 4.00}, .vColor = { 215, 199, 190, 255 } },
-      {.pos = {-0.00, 0.68, 3.97}, .uv = {1.02, -0.67}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 189, 165, 158, 255 } },
-      {.pos = {0.54, 0.23, 3.41}, .uv = {0.57, -0.56}, .vNormal = { 118.00, 0.00, 45.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.00, 0.68, 3.97}, .uv = {-0.32, -0.36}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.62, 0.23, 0.91}, .uv = {2.22, -0.23}, .vNormal = { -110.00, -57.00, 22.00}, .vColor = { 152, 108, 109, 255 } },
-      {.pos = {-0.00, -0.38, 3.25}, .uv = {2.37, -0.92}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.56, 0.23, 3.25}, .uv = {1.94, -0.82}, .vNormal = { -126.00, 8.00, 3.00}, .vColor = { 173, 129, 125, 255 } },
-      {.pos = {-0.00, -0.45, 0.91}, .uv = {-0.13, 0.48}, .vNormal = { 0.00, -105.00, 71.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {0.63, 0.23, 0.91}, .uv = {0.13, 0.24}, .vNormal = { 109.00, -59.00, 23.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.40, -0.72, 0.51}, .uv = {2.29, -0.07}, .vNormal = { -62.00, -86.00, 68.00}, .vColor = { 162, 124, 123, 255 } },
-      {.pos = {-0.65, 0.23, 0.04}, .uv = {2.18, 0.32}, .vNormal = { -98.00, -25.00, 76.00}, .vColor = { 136, 91, 96, 255 } },
-      {.pos = {-0.40, -0.72, 0.04}, .uv = {2.38, 0.27}, .vNormal = { -37.00, -49.00, 110.00}, .vColor = { 137, 93, 97, 255 } },
-      {.pos = {-0.40, -0.72, 0.51}, .uv = {-0.13, 0.48}, .vNormal = { -62.00, -86.00, 68.00}, .vColor = { 162, 124, 123, 255 } },
-      {.pos = {-1.49, -0.47, 0.04}, .uv = {2.38, 0.27}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 202, 182, 168, 255 } },
-      {.pos = {-0.71, -1.04, 0.04}, .uv = {2.38, 0.27}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 152, 116, 115, 255 } },
-      {.pos = {-0.00, -0.45, 0.91}, .uv = {2.53, -0.24}, .vNormal = { 0.00, -105.00, 71.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {-0.00, 0.68, 3.97}, .uv = {1.03, -0.61}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 187, 162, 155, 255 } },
-      {.pos = {-0.56, 0.23, 3.25}, .uv = {1.48, -0.71}, .vNormal = { -126.00, 8.00, 3.00}, .vColor = { 173, 129, 125, 255 } },
-      {.pos = {-0.56, 0.23, 3.41}, .uv = {1.47, -0.77}, .vNormal = { -118.00, 0.00, 45.00}, .vColor = { 175, 131, 126, 255 } },
-      {.pos = {-0.00, -0.45, 0.91}, .uv = {-0.16, 0.37}, .vNormal = { 0.00, -105.00, 71.00}, .vColor = { 209, 190, 179, 255 } },
-      {.pos = {0.55, 0.23, 3.24}, .uv = {0.13, -0.41}, .vNormal = { 126.00, 7.00, 4.00}, .vColor = { 215, 199, 189, 255 } },
-      {.pos = {-0.40, -0.72, 0.04}, .uv = {-0.05, 0.82}, .vNormal = { -37.00, -49.00, 110.00}, .vColor = { 133, 88, 93, 255 } },
-      {.pos = {-0.62, 0.23, 0.91}, .uv = {1.65, 0.05}, .vNormal = { -110.00, -57.00, 22.00}, .vColor = { 148, 104, 105, 255 } },
-      {.pos = {0.63, 0.23, 0.91}, .uv = {0.76, 0.24}, .vNormal = { 109.00, -59.00, 23.00}, .vColor = { 218, 203, 193, 255 } },
-      {.pos = {-0.62, 0.23, 0.91}, .uv = {2.10, -0.06}, .vNormal = { -110.00, -57.00, 22.00}, .vColor = { 148, 104, 105, 255 } },
+      {.pos = {-0.56, 0.23, 3.41}, .uv = {0.13, -0.35}, .vNormal = { -118.00, 0.00, 45.00}, .vColor = { 175, 131, 126, 255 } },
+      {.pos = {-0.00, -0.38, 3.41}, .uv = {0.13, -0.07}, .vNormal = { 0.00, -113.00, 56.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.00, 0.68, 3.97}, .uv = {0.21, -0.41}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {0.67, 0.23, 0.04}, .uv = {0.11, -0.96}, .vNormal = { 122.00, -33.00, 4.00}, .vColor = { 162, 127, 124, 255 } },
+      {.pos = {0.40, -0.72, 0.51}, .uv = {0.06, -0.65}, .vNormal = { 62.00, -86.00, 69.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {0.40, -0.72, 0.04}, .uv = {0.10, -0.63}, .vNormal = { 76.00, -100.00, 14.00}, .vColor = { 166, 133, 128, 255 } },
+      {.pos = {-0.00, -0.38, 3.25}, .uv = {0.13, -0.00}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {0.54, 0.23, 3.41}, .uv = {0.20, -0.11}, .vNormal = { 118.00, 0.00, 45.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {0.40, -0.72, 0.51}, .uv = {0.76, 0.24}, .vNormal = { 62.00, -86.00, 69.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {-0.32, -1.02, 0.50}, .uv = {0.44, 0.26}, .vNormal = { 0.00, -2.00, 126.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {0.32, -1.02, 0.50}, .uv = {0.69, 0.33}, .vNormal = { 0.00, -2.00, 126.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {0.55, 0.23, 3.24}, .uv = {0.21, -0.06}, .vNormal = { 126.00, 7.00, 4.00}, .vColor = { 215, 199, 190, 255 } },
+      {.pos = {-0.00, 0.68, 3.97}, .uv = {0.21, -0.41}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 189, 165, 158, 255 } },
+      {.pos = {-0.62, 0.23, 0.91}, .uv = {-0.12, -0.12}, .vNormal = { -110.00, -57.00, 22.00}, .vColor = { 152, 108, 109, 255 } },
+      {.pos = {-0.00, -0.38, 3.25}, .uv = {0.44, -0.86}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.56, 0.23, 3.25}, .uv = {0.10, -0.92}, .vNormal = { -126.00, 8.00, 3.00}, .vColor = { 173, 129, 125, 255 } },
+      {.pos = {-0.00, -0.45, 0.91}, .uv = {0.66, -0.04}, .vNormal = { 0.00, -105.00, 71.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {0.63, 0.23, 0.91}, .uv = {1.04, -0.12}, .vNormal = { 109.00, -59.00, 23.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {-0.40, -0.72, 0.51}, .uv = {0.09, -0.52}, .vNormal = { -62.00, -86.00, 68.00}, .vColor = { 162, 124, 123, 255 } },
+      {.pos = {-0.65, 0.23, 0.04}, .uv = {0.01, -0.32}, .vNormal = { -98.00, -25.00, 76.00}, .vColor = { 136, 91, 96, 255 } },
+      {.pos = {-0.40, -0.72, 0.04}, .uv = {0.09, -0.36}, .vNormal = { -37.00, -49.00, 110.00}, .vColor = { 137, 93, 97, 255 } },
+      {.pos = {-0.40, -0.72, 0.51}, .uv = {0.05, -0.38}, .vNormal = { -62.00, -86.00, 68.00}, .vColor = { 162, 124, 123, 255 } },
+      {.pos = {-0.40, -0.72, 0.51}, .uv = {0.45, 0.16}, .vNormal = { -62.00, -86.00, 68.00}, .vColor = { 162, 124, 123, 255 } },
+      {.pos = {-1.49, -0.47, 0.04}, .uv = {0.06, -0.00}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 202, 182, 168, 255 } },
+      {.pos = {-0.71, -1.04, 0.04}, .uv = {0.11, -0.23}, .vNormal = { 0.00, 0.00, 126.00}, .vColor = { 152, 116, 115, 255 } },
+      {.pos = {-0.00, -0.45, 0.91}, .uv = {0.26, -0.06}, .vNormal = { 0.00, -105.00, 71.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.40, -0.72, 0.51}, .uv = {0.18, 0.23}, .vNormal = { -62.00, -86.00, 68.00}, .vColor = { 162, 124, 123, 255 } },
+      {.pos = {-0.00, 0.68, 3.97}, .uv = {0.21, -0.41}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 187, 162, 155, 255 } },
+      {.pos = {-0.56, 0.23, 3.25}, .uv = {0.12, -0.38}, .vNormal = { -126.00, 8.00, 3.00}, .vColor = { 173, 129, 125, 255 } },
+      {.pos = {0.55, 0.23, 3.24}, .uv = {0.77, -0.90}, .vNormal = { 126.00, 7.00, 4.00}, .vColor = { 215, 199, 189, 255 } },
+      {.pos = {-0.00, -0.38, 3.25}, .uv = {0.44, -0.83}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
+      {.pos = {-0.40, -0.72, 0.04}, .uv = {0.09, -0.36}, .vNormal = { -37.00, -49.00, 110.00}, .vColor = { 133, 88, 93, 255 } },
+      {.pos = {-0.00, 0.68, 3.97}, .uv = {-0.11, -0.97}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 187, 162, 155, 255 } },
+      {.pos = {-0.62, 0.23, 0.91}, .uv = {-0.12, -0.12}, .vNormal = { -110.00, -57.00, 22.00}, .vColor = { 148, 104, 105, 255 } },
+      {.pos = {-0.00, 0.68, 3.97}, .uv = {0.97, -0.97}, .vNormal = { 0.00, 37.00, 121.00}, .vColor = { 187, 162, 155, 255 } },
+      {.pos = {0.55, 0.23, 3.24}, .uv = {0.77, -0.90}, .vNormal = { 126.00, 7.00, 4.00}, .vColor = { 215, 199, 190, 255 } },
+      {.pos = {0.63, 0.23, 0.91}, .uv = {0.04, -1.00}, .vNormal = { 109.00, -59.00, 23.00}, .vColor = { 218, 203, 193, 255 } },
+      {.pos = {0.55, 0.23, 3.24}, .uv = {0.21, -0.06}, .vNormal = { 126.00, 7.00, 4.00}, .vColor = { 215, 199, 189, 255 } },
+      {.pos = {-0.62, 0.23, 0.91}, .uv = {0.00, -0.62}, .vNormal = { -110.00, -57.00, 22.00}, .vColor = { 148, 104, 105, 255 } },
+      {.pos = {-0.00, -0.38, 3.25}, .uv = {0.11, -0.07}, .vNormal = { 0.00, -126.00, 4.00}, .vColor = { 209, 190, 179, 255 } },
 
 };
 
@@ -2994,21 +3112,21 @@ static const uint16_t poly_OfficeTower_LOD2_Beach[] = {
 
           0, 1, 2,
           3, 4, 5,
-          6, 7, 8,
-          11, 12, 13,
-          8, 7, 14,
-          20, 21, 22,
-          5, 4, 23,
-          22, 21, 24,
-          22, 24, 25,
-          27, 28, 29,
-          17, 1, 0,
-          3, 19, 4,
-          6, 31, 7,
-          17, 16, 1,
-          23, 32, 5,
-          32, 25, 5,
-          20, 35, 21,
+          6, 7, 1,
+          11, 12, 7,
+          1, 7, 2,
+          18, 19, 20,
+          5, 4, 21,
+          20, 19, 23,
+          20, 23, 24,
+          27, 28, 0,
+          28, 1, 0,
+          21, 31, 5,
+          31, 24, 5,
+          3, 36, 4,
+          6, 37, 7,
+          18, 38, 19,
+          28, 39, 1,
 
 };
 
@@ -3016,21 +3134,225 @@ static const uint16_t poly_OfficeTower_LOD2_Beach[] = {
 static const uint16_t poly_OfficeTower_LOD2_Glass[] = {
     //>------------------------------
        //>     + matName: Glass 
-       //>          - matTextureName: Beach Umbrella Textures 
-       //>          - matTextureSize(x,y):  (64, 64) 
+       //>          - matTextureName: Beach_Reflection_Daytime 
+       //>          - matTextureSize(x,y):  (128, 32) 
 
     //>------------------------------
 
-          4, 9, 10,
-          15, 16, 17,
-          18, 4, 19,
-          4, 18, 23,
-          26, 15, 20,
-          30, 31, 6,
-          4, 23, 9,
-          15, 26, 16,
-          30, 19, 31,
-          27, 33, 28,
-          27, 11, 34,
+          8, 9, 10,
+          13, 14, 15,
+          16, 8, 17,
+          8, 16, 22,
+          25, 13, 26,
+          16, 29, 30,
+          8, 22, 9,
+          13, 25, 14,
+          16, 17, 29,
+          32, 33, 15,
+          34, 35, 17,
 
 };
+
+
+void SC_OfficeTower_DL_LOD0() {
+
+    glEnable(GL_CULL_FACE);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+
+    glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_OfficeTower_LOD0));
+    glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_OfficeTower_LOD0));
+    glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_OfficeTower_LOD0));
+    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_OfficeTower_LOD0));
+
+    glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_OfficeTower_LOD0_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_OfficeTower_LOD0_Beach);
+
+    glBindTexture(GL_TEXTURE_2D, textures[19]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_OfficeTower_LOD0_Glass) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_OfficeTower_LOD0_Glass);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+
+
+    gin64_UpdateTriCounter(28);
+}
+
+void SC_OfficeTower_DL_LOD1() {
+
+    glEnable(GL_CULL_FACE);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+
+    glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_OfficeTower_LOD1));
+    glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_OfficeTower_LOD1));
+    glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_OfficeTower_LOD1));
+    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_OfficeTower_LOD1));
+
+    glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_OfficeTower_LOD1_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_OfficeTower_LOD1_Beach);
+
+    glBindTexture(GL_TEXTURE_2D, textures[19]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_OfficeTower_LOD1_Glass) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_OfficeTower_LOD1_Glass);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+
+
+    gin64_UpdateTriCounter(28);
+}
+
+
+void SC_OfficeTower_DL_LOD2() {
+
+    glEnable(GL_CULL_FACE);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+
+    glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_OfficeTower_LOD2));
+    glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_OfficeTower_LOD2));
+    glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_OfficeTower_LOD2));
+    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_OfficeTower_LOD2));
+
+    glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_OfficeTower_LOD2_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_OfficeTower_LOD2_Beach);
+
+    glBindTexture(GL_TEXTURE_2D, textures[19]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_OfficeTower_LOD2_Glass) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_OfficeTower_LOD2_Glass);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+
+
+    gin64_UpdateTriCounter(28);
+}
+
+
+
+
+
+
+
+
+
+
+//----------------------------------------------------------
+
+//GLuint glSandDisplayList;
+//GLuint glGlassDisplayList;
+
+//extern void gin64_NestedEnvObjList(g64_EnvObjectPrefab* instance, GLuint* currentList, int LODStepDist);
+
+
+
+
+
+//glSandDisplayList
+    //officetower_dl...
+    //condotower_dl...
+
+//glGlassDisplayList
+    //officetower_dl...
+    //condotower_dl...
+
+
+void SC_OfficeTower_DL_LOD2_Beach() {
+
+    glEnable(GL_CULL_FACE);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+
+    glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_OfficeTower_LOD2));
+    glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_OfficeTower_LOD2));
+    glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_OfficeTower_LOD2));
+    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_OfficeTower_LOD2));
+
+    glBindTexture(GL_TEXTURE_2D, textures[7]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_OfficeTower_LOD2_Beach) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_OfficeTower_LOD2_Beach);
+
+   // glBindTexture(GL_TEXTURE_2D, textures[19]); //>----- UPDATE ----- rebind with the new material settings
+  //  glDrawElements(GL_TRIANGLES, sizeof(poly_OfficeTower_LOD2_Glass) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_OfficeTower_LOD2_Glass);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+
+
+    gin64_UpdateTriCounter(28);
+}
+
+
+void SC_OfficeTower_DL_LOD2_Glass() {
+
+    glEnable(GL_CULL_FACE);
+
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+    glEnableClientState(GL_NORMAL_ARRAY);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+
+    glVertexPointer(3, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(0 * sizeof(float) + (void*)vert_OfficeTower_LOD2));
+    glTexCoordPointer(2, GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(3 * sizeof(float) + (void*)vert_OfficeTower_LOD2));
+    glNormalPointer(GL_FLOAT, sizeof(gl_XP64_Vert), (void*)(5 * sizeof(float) + (void*)vert_OfficeTower_LOD2));
+    glColorPointer(4, GL_UNSIGNED_BYTE, sizeof(gl_XP64_Vert), (void*)(8 * sizeof(float) + (void*)vert_OfficeTower_LOD2));
+
+
+    glBindTexture(GL_TEXTURE_2D, textures[19]); //>----- UPDATE ----- rebind with the new material settings
+    glDrawElements(GL_TRIANGLES, sizeof(poly_OfficeTower_LOD2_Glass) / sizeof(uint16_t), GL_UNSIGNED_SHORT, poly_OfficeTower_LOD2_Glass);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+    glDisableClientState(GL_NORMAL_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+
+}
+
+bool SC_OfficeTower_Built = false;
+u8 SC_OfficeTower_Counter = 0;
+
+bool SC_OfficeTower_DL_LOD2_ALL(g64_EnvObjectPrefab* instance, int LODStepDist) {
+
+    //for (SC_OfficeTower_Counter = 0; SC_OfficeTower_Counter < 2; SC_OfficeTower_Counter++) {
+
+
+
+    instance->staticModel_LOD[LODStepDist].glDisplayList = glGenLists(1);
+    glNewList(instance->staticModel_LOD[LODStepDist].glDisplayList, GL_COMPILE);
+    //instance->staticModel_LOD[LODStepDist].displayList();
+    SC_OfficeTower_DL_LOD2_Beach();
+    glEndList();
+
+    instance->staticModel_LOD[LODStepDist].glDisplayListB = glGenLists(1);
+    glNewList(instance->staticModel_LOD[LODStepDist].glDisplayListB, GL_COMPILE);
+    //instance->staticModel_LOD[LODStepDist].displayList();
+    SC_OfficeTower_DL_LOD2_Glass();
+    glEndList();
+
+    // }
+
+    return true;
+}
