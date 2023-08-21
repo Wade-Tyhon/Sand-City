@@ -9,6 +9,7 @@
 #include <stdarg.h>
 
 #include "../nGin64.h"
+//#include "../gui/ngin64_GUI_Types.h"
 
 //#include "ngin64_EventTypes.h"
 
@@ -32,7 +33,7 @@ g64_TimeEvent CollectTaxes;
 
 g64_GUIEvent* ActiveGUIEvents[10];
 g64_PlayfieldEvent* ActivePlayfieldEvents[10];
-g64_TimeEvent* ActiveTimeEvents[10];
+g64_TimeEvent* ActiveTimeEvents[20];
 
 g64_GameTimer currentTime;
 bool testEvent = false;
@@ -45,6 +46,7 @@ void gin64_TimeEvent_Handler(g64_TimeEvent* timeEvent);
 extern CursorObject playfieldCursor;
 
 g64_EventArgs defaultArgs = {
+    false,
     false,
     {0,0,0},
     {0.0f, 0.0f, 0.0f},
@@ -131,14 +133,28 @@ void gin64_PlayfieldEvent_Set(char* name, g64_PlayfieldEvent* playfieldEvent, Cu
 
 
 bool gin64_GUIEvent_Init(g64_GUIEvent* guiEvent) {
+    return false;
+}
+
+void gin64_GUIEvent_Set(char* name, g64_GUIEvent* guiEvent, CursorObject* cursor, void(*handlerFunction)) {
+
+}
+/*
+bool gin64_GUIEvent_Init(g64_Menu_Item* guiEvent) {
 
     return true;
 }
-void gin64_GUIEvent_Set(char *name, g64_GUIEvent* guiEvent, g64_GameTimer timerLength, CursorObject* cursor) {
 
-    currentTime = gin64_GetGameTime(); //Get the current starting time
+void gin64_GUIEvent_Set(char *name, g64_Menu_Item* guiEvent, CursorObject* cursor, void(*handlerFunction)) {
+
+    //currentTime = gin64_GetGameTime(); //Get the current starting time
+    //guiEvent->name = name;
+    //guiEvent->menuEvent = cursor;
+    guiEvent->menuEvent->args = defaultArgs;
+    guiEvent->menuEvent->handlerFunc = handlerFunction;
 
 }
+*/
 
 void gin64_Events_Update(){
 
@@ -149,8 +165,10 @@ void gin64_Events_Update(){
 
         if (ActiveTimeEvents[i]) {
 
-            if (ActiveTimeEvents[i]->OnTimerEnd.listeners[0].listenerFunc == NULL)
-                fprintf(stderr, "\n\n--------\n!!! No Listeners !!! \n--------\n\n");
+            if (ActiveTimeEvents[i]->OnTimerEnd.listeners[0].listenerFunc == NULL) {
+
+            }
+               // fprintf(stderr, "\n\n--------\n!!! No Listeners !!! \n--------\n\n");
             //fprintf(stderr, "\n\n--------\n!!!Timer Event Check!!! %f'\n--------\n\n", ActiveTimeEvents[i]->OnTimerEnd.args.time.seconds);
 
             if (currentTime.hours >= ActiveTimeEvents[i]->OnTimerEnd.args.time.hours){
@@ -185,7 +203,10 @@ void gin64_Events_Update(){
 
         if (ActivePlayfieldEvents[i]) {
 
+            //u8 resetTrigger = 0;
+
             ActivePlayfieldEvents[i]->OnTrigger.handlerFunc(&ActivePlayfieldEvents[i]->OnTrigger, ActivePlayfieldEvents[i]->name);
+            //ActivePlayfieldEvents[i]->OnCompletion.handlerFunc(&ActivePlayfieldEvents[i]->OnCompletion, ActivePlayfieldEvents[i]->name);
 
                 if (ActivePlayfieldEvents[i]->OnTrigger.args.trigger == true) {
 
@@ -195,7 +216,9 @@ void gin64_Events_Update(){
 
                     else{
                         gin64_ForEach(g64_EventListeners templistener, ActivePlayfieldEvents[i]->OnTrigger.listeners) {
-                            if (templistener.listenerFunc)
+
+                            //fprintf(stderr, "\n\n--------\n > Check Key Word: %s \n--------\n\n", ActivePlayfieldEvents[i]->OnTrigger.args.key);
+                            if (templistener.listenerFunc)                                
                                 templistener.listenerFunc(&ActivePlayfieldEvents[i]->OnTrigger.args); //Note - Call each listener in the array
                         }
 
@@ -211,6 +234,7 @@ void gin64_Events_Update(){
                                 templistener.listenerFunc(&ActivePlayfieldEvents[i]->OnCompletion.args); //Note - Call each listener in the array
                         }
                     }
+
                     ActivePlayfieldEvents[i]->OnTrigger.args.trigger = false;
                     //gin64_PlayfieldEvent_Set("Build Type", &ActiveTimeEvents[i], &playfieldCursor, &SC_BuildingType_Handler);
                     //gin64_PlayfieldEvent_Set(ActiveTimeEvents[i]->name, ActiveTimeEvents[i], ActiveTimeEvents[i]->timerLength, ActiveTimeEvents[i]->loop);

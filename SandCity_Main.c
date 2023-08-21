@@ -5,7 +5,8 @@
 #include <malloc.h>
 #include <math.h>
 #include "ngin64/nGin64.h"
-
+#include "scenes/SC_Scene_Defs.h"
+#include "scenes/prefabs/creatures/SC_CreatureTypes.h"
 
 
 
@@ -70,35 +71,25 @@ static const GLfloat environment_color[] = { 0.1f, 0.03f, 0.2f, 0.5f };
 GLfloat light_pos[2][4] = {
     { -18, 6, 18, 18 },
     { 18, 0, 0, 0 },
-    //{ 0, 0, 1, 0 },
-    //{ 0, 0, -1, 0 },
-   // { 8, 3, 0, 1 },
-   // { -8, 3, 0, 1 },
-   // { 0, 3, 8, 1 },
-   // { 0, 3, -8, 1 },
+
 }; 
 
 GLfloat light_diffuse[2][4] = {
     { 0.9f, .9f, 0.75f, 0.75f },
     { 0.55f, 0.5f, 0.45f, 0.3f },
-    //{ 0.0f, 0.0f, 1.0f, 0.75f },
-   // { 1.0f, 1.0f, 0.0f, 0.75f },
-   // { 1.0f, 0.0f, 1.0f, 0.75f },
-   // { 0.0f, 1.0f, 1.0f, 0.75f },
-   // { 1.0f, 1.0f, 1.0f, 0.75f },
-   // { 1.0f, 1.0f, 1.0f, 0.75f },
+
 };
 
 
 
 
 
-u8 textureTotal = 20; //used for loops
-GLuint textures[20];
-static sprite_t* sprites[20];
+u8 textureTotal = 21; //used for loops
+GLuint textures[21];
+static sprite_t* sprites[21];
 
 
-static const char *texture_path[20] = {
+static const char *texture_path[21] = {
     "rom:/circle0.sprite",
     "rom:/diamond0.sprite",
     "rom:/pentagon0.sprite",
@@ -118,8 +109,9 @@ static const char *texture_path[20] = {
     "rom:/Crab_Shell.ci4.sprite",
     "rom:/Crab_Legs.ci4.sprite",
     "rom:/Crab_Legs_2.ci4.sprite",
-    "rom:/Beach_Reflection_Daytime.ci4.sprite",
-    //20
+    "rom:/Crab_Accessories.ci4.sprite",
+    "rom:/Beach_Reflection_Daytime.ci4.sprite",//20
+    
 };
 
 
@@ -205,7 +197,23 @@ extern void SC_Events_Update();
 void SC_Setup()
 {
 
+
+
+    //----- Note ------ Change this throughout the game in false,order to adjust what appears on screen
+    /**/
+    SC_GameState.titleScreen.active = true;
+    SC_GameState.playfieldMain.active = false;
     
+    
+    /*
+    SC_GameState.titleScreen.active = false;
+    SC_GameState.playfieldMain.active = true;
+    */
+
+
+    //SC_GameState.playfieldMenu.active = true;
+    
+
 
     //----- Note ------------------------- NGin64 General Setup ------------------------------------
     gin64_ProjSetup(); //Initial NGin64 Project Setup. (Many of these settings can be adjusted at run time if needed)
@@ -216,7 +224,10 @@ void SC_Setup()
 
     gin64_CamInit(); //Note - Set up camera functions   
 
-    gin64_XMAudio_Init(); //Note - Set up audio functions
+
+    //Note - Music Init 1:
+    //gin64_XMAudio_Init(); //Note - Set up audio functions
+    gin64_WAVAudio_Init(); //Note - Set up audio functions
     //----------------------------------------------------------------------------------------------
 
 
@@ -240,12 +251,24 @@ void SC_Setup()
 
     uiSprites[0] = sprite_load(ui_texture_path[0]);
 
-    SC_Events_Init(); //----- Note ----- All vents need to be initiated before other gameplay scripts so that scripts can subscribe to each event!
+    SC_Events_Init(); //----- Note ----- All events need to be initiated before other gameplay scripts so that scripts can subscribe to each event!
 
     SC_Interface_Init();
-   
-    beach_scene_init();
 
+   // void SC_Playfield_Structure_Menu_Init()
+
+
+    if (SC_GameState.titleScreen.active)
+    {
+        ngin64_UpdateCamFollow(&playfieldCursor.obj);
+        SC_Scene_Title_Init();
+    }
+        
+
+    else if(SC_GameState.playfieldMain.active || SC_GameState.playfieldMenu.active){
+        ngin64_UpdateCamFollow(&playfieldCursor.obj);
+        beach_scene_init();
+    }
     //----------------------------------------------------------------------------------------------
 
 
@@ -301,41 +324,48 @@ void SC_Setup()
 
 }
 
-void draw_quad()
-{
-    glBegin(GL_TRIANGLE_STRIP);
-        glNormal3f(0, 1, 0);
-        glTexCoord2f(0, 0);
-        glVertex3f(-0.5f, 0, -0.5f);
-        glTexCoord2f(0, 1);
-        glVertex3f(-0.5f, 0, 0.5f);
-        glTexCoord2f(1, 0);
-        glVertex3f(0.5f, 0, -0.5f);
-        glTexCoord2f(1, 1);
-        glVertex3f(0.5f, 0, 0.5f);
-    glEnd();
-}
-
 void render() 
 {
-    gin64_BeginFrame(); //NGin64 Function - Clearing the frame buffer, the zbuffer, setting up the scene 
-    gin64_LightingUpdate(); //NOTE ----- Set up lights and fog
-    gin64_CamView(distance, cam_rotate); //NGin64 Function - Setting up the camera and matrix for the current scene
+    if (SC_GameState.titleScreen.active) {
 
-    //----- Note ----- reset rendered tri counter: 
-    gin64_ResetTriCounter();
-
-    render_beach_scene();
-
-    
-
-    SC_Interface_Draw();
+        gin64_BeginFrame(); //NGin64 Function - Clearing the frame buffer, the zbuffer, setting up the scene 
+        gin64_LightingUpdate(); //NOTE ----- Set up lights and fog
+        gin64_CamView(distance, cam_rotate); //NGin64 Function - Setting up the camera and matrix for the current scene
+        gin64_ResetTriCounter();
+        SC_Scene_Title_Render();
 
 
-    gin64_UpdateDebug();
-    gin64_EndFrame(); //Perform any final funtions and gl_context_end
+        SC_Interface_Draw();
 
-    rdpq_detach_show();
+
+        //gin64_UpdateDebug();
+        gin64_EndFrame(); //Perform any final funtions and gl_context_end
+
+        rdpq_detach_show();
+    }
+
+    if (SC_GameState.playfieldMain.active) {
+
+        gin64_BeginFrame(); //NGin64 Function - Clearing the frame buffer, the zbuffer, setting up the scene 
+        gin64_LightingUpdate(); //NOTE ----- Set up lights and fog
+        gin64_CamView(distance, cam_rotate); //NGin64 Function - Setting up the camera and matrix for the current scene
+
+        //----- Note ----- reset rendered tri counter: 
+        gin64_ResetTriCounter();
+
+        render_beach_scene();
+
+
+
+        SC_Interface_Draw();
+
+
+        gin64_UpdateDebug();
+        gin64_EndFrame(); //Perform any final funtions and gl_context_end
+
+        rdpq_detach_show();
+
+    }
 }
 
 
@@ -379,115 +409,64 @@ int main()
         gin64_Time();
         
 
-        
-
+    //Note - Music Poll 1:
+        //gin64_XMAudio_Song();
+        gin64_WAVAudio_Song();
 
         gin64_Controller_Update();
-        gin64_XMAudio_Song();
-        gin64_Events_Update();
-       // gin64_XMAudio_Song();
-
-       // SC_Events_Update();
-
-        ngin64_UpdateCameraPosition();
-
-        //gin64_XMAudio_Song();
 
 
+        //if(SC_GameState.pauseScreen.active)
 
-       
-        int tempFPSCheck = gin64_GetFPS();
+        if (SC_GameState.titleScreen.active){
+            
+            gin64_Events_Update();
 
-        if (tempFPSCheck <= checkFPS && fpsCheckCounter < 10) {
+            ngin64_UpdateCameraPosition();
+            render();
+            gin64_WAVAudio_Song();
+            SC_Interface_Update();
 
-            fpsCheckCounter += 1;
+
+            if (SC_GameState.playfieldMain.active) { //Note - if you switch to the playfield, run setup again...
+                ngin64_UpdateCamFollow(&playfieldCursor.obj);
+                beach_scene_init();
+                //SC_Setup();
+            }
         }
 
-        else if (fpsCheckCounter >= 10) {
-            checkFPS = tempFPSCheck;
-            fpsCheckCounter = 0;
-        }
+        else if (SC_GameState.playfieldMain.active) {
+
+            gin64_Events_Update();
+
+            ngin64_UpdateCameraPosition();
+
+            int tempFPSCheck = gin64_GetFPS();
+
+            if (tempFPSCheck <= checkFPS && fpsCheckCounter < 10) {
+
+                fpsCheckCounter += 1;
+            }
+
+            else if (fpsCheckCounter >= 10) {
+                checkFPS = tempFPSCheck;
+                fpsCheckCounter = 0;
+            }
 
 
-        //render();
-        gin64_XMAudio_Song();
-        
-        currentTick = gin64_GetPlaybackTick(mainTickRate);
 
-        if (previousTick < currentTick) {
+            //Note - Music Poll 2:
+                //gin64_XMAudio_Song();
+            gin64_WAVAudio_Song();
 
-            previousTick = currentTick;
             render();
 
+            //Note - Music Poll 3:
+               //gin64_XMAudio_Song();
+            gin64_WAVAudio_Song();
+
+            SC_Interface_Update();
         }
-
-        
-       gin64_XMAudio_Song();
-
-
-
-
-
-
-
-
-
-       /*
-        if (checkFPS >= 41)
-            mainTickRate = 40;
-        else if (checkFPS >= 31)
-            mainTickRate = 30;
-        else if (checkFPS >= 21)
-            mainTickRate = 20;
-        else if (checkFPS >= 16)
-            mainTickRate = 15;
-            */
-        /*
-        if (prevTickRate != mainTickRate) {
-
-            prevTickRate = gin64_GetPlaybackTick(mainTickRate);
-        }
-
-        currentTick = gin64_GetPlaybackTick(mainTickRate);
-
-        if (previousTick < currentTick) {
-
-            previousTick = currentTick;
-            render();
-
-        }
-        */
-
-        //gin64_XMAudio_Song();
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*
-        if(testOnce == true){
-            render();
-            testOnce = false;
-        }
-
-        else if (testOnce == false) {
-
-            testOnce = true;
-        }
-        */
-
-
-        //gin64_XMAudio_Song();
-        SC_Interface_Update();
-        
 
            if (DEBUG_RDP)
                rspq_wait();

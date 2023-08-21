@@ -13,8 +13,12 @@ extern GLuint textures[];
 extern u8 textureTotal;
 
 //void SC_Prefabs_Builder(g64_EnvObjectPrefab* prefabName, void (*displayListName));
-void SC_Prefabs_Builder(g64_EnvObjectPrefab* prefabName, void(*displayListName), void(*displayListName2), void(*displayListName3), u8 HP, u8 buildPoints, u8 currency);
+//void SC_Prefabs_Builder(g64_EnvObjectPrefab* prefabName, void(*displayListName), void(*displayListName2), void(*displayListName3), u8 HP, u8 buildPoints, u8 currency);
+void SC_Prefabs_Builder(g64_EnvObjectPrefab* prefabName, void(*displayListName), void(*displayListName2), void(*displayListName3), u8 maxJobs, u8 maxResidents, u8 HP, u8 buildMaterials, u8 buildCurrency);
 void gin64_RenderInstanceObj(g64_EnvObjectPrefab* env, int LODStepDist);
+
+
+g64_EnvObjectPrefab SC_Empty_PF; //Used for demolishing an existing property
 
 extern void SC_SimpleTower_DL_LOD0();
 extern void SC_SimpleTower_DL_LOD1();
@@ -57,20 +61,18 @@ void SC_Prefabs_BuildEvent();
 
 void SC_Prefabs_Init()
 {
-	SC_Prefabs_Builder(&SC_SimpleTower_PF, &SC_SimpleTower_DL_LOD1, &SC_SimpleTower_DL_LOD1, &SC_SimpleTower_DL_LOD2, 8, 6, 1);
-	SC_Prefabs_Builder(&SC_WatchTower_PF, &SC_WatchTower_DL_LOD0, &SC_WatchTower_DL_LOD1, &SC_WatchTower_DL_LOD2, 6, 8, 1);
-	SC_Prefabs_Builder(&SC_LargeTower_PF, &SC_LargeTower_DL_LOD0, &SC_LargeTower_DL_LOD1, &SC_LargeTower_DL_LOD2, 22, 14, 3);
-	//lighthouse
-	//
-	SC_Prefabs_Builder(&SC_OfficeTower_PF, &SC_OfficeTower_DL_LOD0, &SC_OfficeTower_DL_LOD1, &SC_OfficeTower_DL_LOD2, 22, 30, 8); //office
-	SC_Prefabs_Builder(&SC_ResidentialTower_PF, &SC_ResidentialTower_DL_LOD0, &SC_ResidentialTower_DL_LOD1, &SC_ResidentialTower_DL_LOD2, 20, 25, 6); //condo
+	SC_Prefabs_Builder(&SC_SimpleTower_PF, &SC_SimpleTower_DL_LOD1, &SC_SimpleTower_DL_LOD1, &SC_SimpleTower_DL_LOD2, 0, 2, 12, 6, 1);
+	SC_Prefabs_Builder(&SC_WatchTower_PF, &SC_WatchTower_DL_LOD0, &SC_WatchTower_DL_LOD1, &SC_WatchTower_DL_LOD2, 5, 1, 40, 8, 1);
+	SC_Prefabs_Builder(&SC_LargeTower_PF, &SC_LargeTower_DL_LOD0, &SC_LargeTower_DL_LOD1, &SC_LargeTower_DL_LOD2, 3, 6, 20, 14, 3);
+	SC_Prefabs_Builder(&SC_OfficeTower_PF, &SC_OfficeTower_DL_LOD0, &SC_OfficeTower_DL_LOD1, &SC_OfficeTower_DL_LOD2, 20, 0, 30, 30, 8); //office
+	SC_Prefabs_Builder(&SC_ResidentialTower_PF, &SC_ResidentialTower_DL_LOD0, &SC_ResidentialTower_DL_LOD1, &SC_ResidentialTower_DL_LOD2, 6, 12, 40, 25, 6); //condo
 	//powerplant
 
 
 	gin64_Event_Subscribe(&BuildObjectEvent.OnTrigger, &SC_Prefabs_BuildEvent);
 }
 
-void SC_Prefabs_Builder(g64_EnvObjectPrefab* prefabName, void (*displayListName), void(*displayListName2), void(*displayListName3), u8 HP, u8 buildPoints, u8 currency) {
+void SC_Prefabs_Builder(g64_EnvObjectPrefab* prefabName, void (*displayListName), void(*displayListName2), void(*displayListName3), u8 maxJobs, u8 maxResidents, u8 HP, u8 buildMaterials, u8 buildCurrency) {
 	//SC_SimpleTower_DL
 	SetVector3(&prefabName->obj.pos, 0, 0, 0); // default position... this should be updated when an instance is made
 	SetVector3(&prefabName->obj.rot, 0, 0, 0);
@@ -82,13 +84,27 @@ void SC_Prefabs_Builder(g64_EnvObjectPrefab* prefabName, void (*displayListName)
 	prefabName->staticModel_LOD[1].displayList = displayListName2;
 	prefabName->staticModel_LOD[2].displayList = displayListName3;
 
+
+	if(maxJobs >= 1){
+		prefabName->jobs[0] = 1; //Initial job 
+		prefabName->jobs[1] = maxJobs; //Initial job 
+	}
+
+
+	if (maxResidents >= 1) {
+		prefabName->residents[0] = 1;
+		prefabName->residents[1] = maxResidents;
+	}
+	prefabName->mood[0] = 10;
+	//prefabName->alert = 0;
+
 	prefabName->pointsH = HP; //a building's structural integrity... over time, it will degrade and needs to be revamped
-	prefabName->pointsB = buildPoints; //how much sand is needed to build this structure	
-	prefabName->pointsC = currency; //how much sand is needed to build this structure
+	prefabName->pointsB = buildMaterials; //how much sand is needed to build this structure	
+	prefabName->pointsC = buildCurrency; //how much money is needed to build this structure
 
 #//ifdef DEBUG_NGIN64_INTERFACE
 	//fprintf(stderr, "\nTesting Input | A %i | B %i", g64_Pad[0].hold.A, g64_Pad[0].hold.B);
-	fprintf(stderr, "\n > SC_Prefabs_Builder \n");
+	//fprintf(stderr, "\n > SC_Prefabs_Builder \n");
 //#endif
 
 

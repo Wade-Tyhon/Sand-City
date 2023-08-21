@@ -28,6 +28,19 @@ g64_GameplayInput gameInput;
 g64_MenuInput menuInput;
 
 
+g64_GameState SC_GameState;
+
+g64_GameFlags SC_GameFlags = {
+    false,
+    false,
+    false,
+    false,
+    false
+};
+
+
+
+
 /*------------------------------NGin64_Camera_Defaults---------------------------------*/
 
 
@@ -43,14 +56,17 @@ ViewSettings viewSettings =
 
 CameraObject mainCamera =
 {
-    {{0,-10,100}, {0,0,0}, {1,1,1}},//mainCamera.obj ( {pos}, {rot}, {scl})
+    {{0,-75,50}, {0,0,0}, {1,1,1}},//mainCamera.obj ( {pos}, {rot}, {scl})
+    //{{0,-35,20}, {0,0,0}, {1,1,1}},//mainCamera.obj ( {pos}, {rot}, {scl})
     NULL, //mainCamera.camLook
     {0,0,0}, //mainCamera.camLookPoint
     {0,-6,5}, //mainCamera.cameraOffset
+    //{0,-3,0}, //mainCamera.cameraOffset
     {0,0,0}, //mainCamera.camLookPoint
     0.0f, //mainCamera.cameraOrbit
     0.0f, //mainCamera.audioOrbit
     -5.0f, //mainCamera.distance
+    //-2.0f, //mainCamera.distance
     0.0f, //mainCamera.adjDistance
     0.0f, //mainCamera.nearPosition
     0 //mainCamera.againstWall
@@ -67,8 +83,8 @@ typedef struct {
 
 playerState player =
 {
-    100, // mat_sand
-    50 // mat_shells
+    20, // mat_sand
+    20 // mat_shells
 };
 
 /*
@@ -83,10 +99,18 @@ typedef struct {
 */
 
 
-cityState city =
+cityState SC_CityStats =
 {
+    0,
     0, //propertyTax
     0, //salesTax
     0, //residents
-    0 //mood
+    0, //mood
+    0,
+
+
+    0, //.expenses
+
+    20, //mat_sand
+    22 //mat_shells
 };

@@ -6,6 +6,7 @@
 #include <math.h>
 
 #include "../../ngin64/nGin64.h"
+#include "../../interface/SC_Interface.h"
 #include "../prefabs/castles/SC_CastlesTypes.h"
 
 
@@ -18,6 +19,12 @@ extern uint16_t get_BeachPlayfield_Size();
 
 playfieldState S_PlayfieldState_Current[16][7];
 playfieldState S_PlayfieldState_Pending[16][7];
+
+playfieldState S_PlayfieldState_TEMPSTORAGE[16][7];
+
+extern u8 currentEditingMode;
+//extern enum g64_EditModeState;
+//extern enum g64_EditModeState editModeState;
 
 
 extern GLuint textures[];
@@ -92,16 +99,16 @@ void s_playfield_init() {
 
             //----- Note -----  S_PlayfieldState_Pending For assigning updates to the playfield... when boolean 'updating' is set to true on a particular tile, 
             //                  the updates will be compared against S_PlayfieldState_Current to figure out what changes need to be made
-            S_PlayfieldState_Pending[column][row].updating = true; //Currently in the process of updating, no further changes can be made until completed
+            S_PlayfieldState_Pending[column][row].updating = false; //Currently in the process of updating, no further changes can be made until completed
             S_PlayfieldState_Pending[column][row].cursorActive = false; //Currently in the process of updating, no further changes can be made until completed
-            S_PlayfieldState_Pending[column][row].groundHeight = pos_LOW; //Position of playfield: standard, raised, lowered
+            S_PlayfieldState_Pending[column][row].groundHeight = pos_MID; //Position of playfield: standard, raised, lowered
             S_PlayfieldState_Pending[column][row].water = 0; // no water, high water, mid water, low water, 
             S_PlayfieldState_Pending[column][row].strutureType = 0; //House unit, tower, wall, lighthouse, etc
             S_PlayfieldState_Pending[column][row].eventType = 0; //0 by default (no event), other events could be: "new resident" "received power" "upgrading to new structure" "damaged by waves" etc
             S_PlayfieldState_Pending[column][row].status = 0; //New, damaged, deteriorating, destroyed
             S_PlayfieldState_Pending[column][row].power = false; //Is power available in this structure (if applicable)
             S_PlayfieldState_Pending[column][row].residents = 0; //Number of animal residents in this structure (if applicable)
-            S_PlayfieldState_Pending[column][row].structure = SC_WatchTower_PF;
+            //S_PlayfieldState_Pending[column][row].structure = SC_WatchTower_PF;
             //S_PlayfieldState_Pending[column][row].residents = NULL;
         }
 
@@ -127,6 +134,297 @@ void s_playfield_init() {
 void s_playfield_update(int column, int row) {
 
 
+    if(editModeState == Landscape){
+
+        updatePlayfield += 1;
+
+
+    #ifdef DEBUG_NGIN64_INITFUNC
+        fprintf(stderr, "\nUpdating Current [%i] to be Pending [%i]\n\n", S_PlayfieldState_Current[column][row].groundHeight, S_PlayfieldState_Pending[column][row].groundHeight);
+    #endif
+
+            
+            
+            
+
+            
+            
+            S_PlayfieldState_TEMPSTORAGE[column][row].groundHeight = S_PlayfieldState_Current[column][row].groundHeight;
+            
+
+           // for (int i = 0; i < 4; i++){
+
+
+            bool sharedVertices[4] = { true, true, true, true };
+
+            int tempColumn = 0;
+            int tempRow = 0;
+
+
+            //----- Note -----  Do a check of surrounding tiles to see if they share vertices with the one aboutto be edited. 
+            //                  If they do and they have an object on them, then do not update this vertex height.
+
+            for (int i = 0; i < 8; i++)
+            {
+                if (i == 0)
+                    tempColumn = column - 1;
+                else if (i == 1)
+                    tempColumn = column + 1;
+                else if (i == 2)
+                    tempRow = row - 1;
+                else if (i == 3)
+                    tempRow = row + 1;
+                else if (i == 4) {
+                    tempColumn = column - 1;
+                    tempRow = row - 1;
+                }
+                else if (i == 5) {
+                    tempColumn = column + 1;
+                    tempRow = row - 1;
+                }
+                else if (i == 6) {
+                    tempColumn = column - 1;
+                    tempRow = row + 1;
+                }
+                else if (i == 6) {
+                    tempColumn = column + 1;
+                    tempRow = row + 1;
+                }
+
+
+
+                if (S_PlayfieldState_Current[tempColumn][tempRow].structure.staticModel_LOD[2].glDisplayList) {
+                
+
+
+                    
+
+                    S_PlayfieldState_TEMPSTORAGE[tempColumn][tempRow].groundHeight = S_PlayfieldState_Current[tempColumn][tempRow].groundHeight;
+                    /*
+                    for (int i = 0; i < 4; i++) {
+                    
+                        for (int z = 0; z < 4; z++) {
+
+                            if (editableBlocks[column][row][i] == editableBlocks[tempColumn][tempRow][z])
+                                sharedVertices[i] = false;
+                        }
+                    }*/
+                }
+                
+            }
+
+            S_PlayfieldState_Current[column][row].groundHeight = S_PlayfieldState_Pending[column][row].groundHeight;
+
+
+            for (int i = 0; i < 4; i++) {
+
+
+               // if (sharedVertices[i] == true) {
+
+                    //if(vert_BeachPlayfield[editableBlocks[column][row][i]].pos[2] != S_PlayfieldState_Pending[column][row].groundHeight){
+                     //if (!S_PlayfieldState_Current[playfieldCursor.column][playfieldCursor.row].structure.staticModel_LOD[2].glDisplayList){
+
+                    vert_BeachPlayfield[editableBlocks[column][row][i]].pos[2] = S_PlayfieldState_Pending[column][row].groundHeight;
+
+                    if (S_PlayfieldState_Current[column][row].groundHeight == pos_LOW) {
+                        vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_LOW[0];
+                        vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_LOW[1];
+                        vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_LOW[2];
+                    }
+
+                    else if (S_PlayfieldState_Current[column][row].groundHeight == pos_MID) {
+                        vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_MID[0];
+                        vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_MID[1];
+                        vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_MID[2];
+                    }
+
+                    else if (S_PlayfieldState_Current[column][row].groundHeight == pos_HIGH) {
+                        vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_HIGH[0];
+                        vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_HIGH[1];
+                        vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_HIGH[2];
+                    }
+               // }
+                //}
+            }
+
+        //}
+
+
+        if (S_PlayfieldState_Current[column][row].groundHeight == S_PlayfieldState_Pending[column][row].groundHeight)
+        {
+            S_PlayfieldState_Pending[column][row].updating = false;
+            recalcTopology = true;
+        }
+
+        /*
+        for (int i = 0; i < 8; i++)
+        {
+            if (i == 0)
+                tempColumn = column - 1;
+            else if (i == 1)
+                tempColumn = column + 1;
+            else if (i == 2)
+                tempRow = row - 1;
+            else if (i == 3)
+                tempRow = row + 1;
+            else if (i == 4) {
+                tempColumn = column - 1;
+                tempRow = row - 1;
+            }
+            else if (i == 5) {
+                tempColumn = column + 1;
+                tempRow = row - 1;
+            }
+            else if (i == 6) {
+                tempColumn = column - 1;
+                tempRow = row + 1;
+            }
+            else if (i == 7) {
+                tempColumn = column + 1;
+                tempRow = row + 1;
+            }
+
+
+            if (tempColumn > 6)
+                tempColumn = 6;
+            else if (tempColumn < 0)
+                tempColumn = 0;
+
+            if (tempRow > 15)
+                tempRow = 15;
+            else if (tempRow < 0)
+                tempRow = 0;
+
+            //fprintf(stderr, "\n FIX PLAYFIELD HEIGHT!!!!!!!!\n");
+            //fprintf(stderr, "\n FIX PLAYFIELD HEIGHT2!!!!!!!!\n");
+            //fprintf(stderr, "\n FIX PLAYFIELD HEIGHT3!!!!!!!!\n");
+            //fprintf(stderr, "\n FIX PLAYFIELD HEIGHT4!!!!!!!!\n\n\n");
+
+            
+            if (S_PlayfieldState_Current[tempColumn][tempRow].structure.staticModel_LOD[2].glDisplayList) {
+                
+                //S_PlayfieldState_TEMPSTORAGE[column][row].groundHeight
+
+
+                fprintf(stderr, "\n FIX PLAYFIELD HEIGHT!!!!!!!!\n");
+                fprintf(stderr, "\n FIX PLAYFIELD HEIGHT!!!!!!!!\n");
+                fprintf(stderr, "\n FIX PLAYFIELD HEIGHT!!!!!!!!\n");
+                fprintf(stderr, "\n FIX PLAYFIELD HEIGHT!!!!!!!!\n\n\n");
+
+                for (int i = 0; i < 4; i++) {
+
+                    fprintf(stderr, "\n FIX PLAYFIELD HEIGHT!!!!!!!!\n");
+                    fprintf(stderr, "\n FIX PLAYFIELD HEIGHT!!!!!!!!\n");
+                    fprintf(stderr, "\n FIX PLAYFIELD HEIGHT!!!!!!!!\n");
+                    fprintf(stderr, "\n FIX PLAYFIELD HEIGHT!!!!!!!!\n\n\n");
+
+                    vert_BeachPlayfield[editableBlocks[tempColumn][tempRow][i]].pos[2] = S_PlayfieldState_TEMPSTORAGE[tempColumn][tempRow].groundHeight;
+
+                    if (S_PlayfieldState_TEMPSTORAGE[tempColumn][tempRow].groundHeight == pos_LOW) {
+                        vert_BeachPlayfield[editableBlocks[tempColumn][tempRow][i]].vColor[0] = vColor_LOW[0];
+                        vert_BeachPlayfield[editableBlocks[tempColumn][tempRow][i]].vColor[1] = vColor_LOW[1];
+                        vert_BeachPlayfield[editableBlocks[tempColumn][tempRow][i]].vColor[2] = vColor_LOW[2];
+                    }
+
+                    else if (S_PlayfieldState_TEMPSTORAGE[tempColumn][tempRow].groundHeight == pos_MID) {
+                        vert_BeachPlayfield[editableBlocks[tempColumn][tempRow][i]].vColor[0] = vColor_MID[0];
+                        vert_BeachPlayfield[editableBlocks[tempColumn][tempRow][i]].vColor[1] = vColor_MID[1];
+                        vert_BeachPlayfield[editableBlocks[tempColumn][tempRow][i]].vColor[2] = vColor_MID[2];
+                    }
+
+                    else if (S_PlayfieldState_TEMPSTORAGE[tempColumn][tempRow].groundHeight == pos_HIGH) {
+                        vert_BeachPlayfield[editableBlocks[tempColumn][tempRow][i]].vColor[0] = vColor_HIGH[0];
+                        vert_BeachPlayfield[editableBlocks[tempColumn][tempRow][i]].vColor[1] = vColor_HIGH[1];
+                        vert_BeachPlayfield[editableBlocks[tempColumn][tempRow][i]].vColor[2] = vColor_HIGH[2];
+                    }
+
+                }
+
+            }
+            
+                
+        }
+
+
+
+        */
+
+
+        for (int column = 0; column < 16; column++)
+            for (int row = 0; row < 7; row++) {            
+                
+                if (S_PlayfieldState_Current[column][row].structure.staticModel_LOD[2].glDisplayList){
+
+                    for (int i = 0; i < 4; i++) {
+
+                        vert_BeachPlayfield[editableBlocks[column][row][i]].pos[2] = S_PlayfieldState_Pending[column][row].structure.obj.pos.z;
+                        S_PlayfieldState_Pending[column][row].groundHeight = S_PlayfieldState_Pending[column][row].structure.obj.pos.z;
+
+                        if (vert_BeachPlayfield[editableBlocks[column][row][i]].pos[2] == pos_LOW) {
+                            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_LOW[0];
+                            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_LOW[1];
+                            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_LOW[2];
+                        }
+
+                        else if (vert_BeachPlayfield[editableBlocks[column][row][i]].pos[2] == pos_MID) {
+                            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_MID[0];
+                            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_MID[1];
+                            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_MID[2];
+                        }
+
+                        else if (vert_BeachPlayfield[editableBlocks[column][row][i]].pos[2] == pos_HIGH) {
+                            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_HIGH[0];
+                            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_HIGH[1];
+                            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_HIGH[2];
+                        }
+
+                        else {
+                            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_MID[0];
+                            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_MID[1];
+                            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_MID[2];
+                        }
+
+
+                      //  vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_HIGH[0];
+                      //  vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_HIGH[1];
+                      //  vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_HIGH[2];
+
+                        S_PlayfieldState_Current[column][row].groundHeight = S_PlayfieldState_Pending[column][row].groundHeight;
+                        //S_PlayfieldState_Current[column][row].structure = S_PlayfieldState_Pending[column][row].structure;
+
+
+                    }
+
+                }
+
+                
+            
+        }
+
+
+    #ifdef DEBUG_NGIN64_INITFUNC
+        fprintf(stderr, "\nUpdated Playfield %i Times!\n\n", updatePlayfield);
+    #endif
+    }
+
+
+    else if (editModeState == Building) {
+
+        S_PlayfieldState_Current[column][row].structure = S_PlayfieldState_Pending[column][row].structure;
+        S_PlayfieldState_Pending[column][row].groundHeight = S_PlayfieldState_Current[column][row].groundHeight;
+        S_PlayfieldState_Pending[column][row].updating = false;
+    }
+
+
+
+}
+
+
+
+
+void s_playfield_update_OLD(int column, int row) {
+
+
 
     updatePlayfield += 1;
 
@@ -135,29 +433,37 @@ void s_playfield_update(int column, int row) {
     fprintf(stderr, "\nUpdating Current [%i] to be Pending [%i]\n\n", S_PlayfieldState_Current[column][row].groundHeight, S_PlayfieldState_Pending[column][row].groundHeight);
 #endif
 
-        S_PlayfieldState_Current[column][row].groundHeight = S_PlayfieldState_Pending[column][row].groundHeight;
+    S_PlayfieldState_Current[column][row].groundHeight = S_PlayfieldState_Pending[column][row].groundHeight;
 
-        for (int i = 0; i < 4; i++) {
-            vert_BeachPlayfield[editableBlocks[column][row][i]].pos[2] = S_PlayfieldState_Pending[column][row].groundHeight;
+    // for (int i = 0; i < 4; i++){
 
-            if (S_PlayfieldState_Current[column][row].groundHeight == pos_LOW){
-                vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_LOW[0];
-                vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_LOW[1];
-                vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_LOW[2];
-            }
 
-            else if (S_PlayfieldState_Current[column][row].groundHeight == pos_MID) {
-                vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_MID[0];
-                vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_MID[1];
-                vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_MID[2];
-            }
+    for (int i = 0; i < 4; i++) {
 
-            else if (S_PlayfieldState_Current[column][row].groundHeight == pos_HIGH) {
-                vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_HIGH[0];
-                vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_HIGH[1];
-                vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_HIGH[2];
-            }
+        //if(vert_BeachPlayfield[editableBlocks[column][row][i]].pos[2] != S_PlayfieldState_Pending[column][row].groundHeight){
+
+        vert_BeachPlayfield[editableBlocks[column][row][i]].pos[2] = S_PlayfieldState_Pending[column][row].groundHeight;
+
+        if (S_PlayfieldState_Current[column][row].groundHeight == pos_LOW) {
+            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_LOW[0];
+            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_LOW[1];
+            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_LOW[2];
         }
+
+        else if (S_PlayfieldState_Current[column][row].groundHeight == pos_MID) {
+            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_MID[0];
+            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_MID[1];
+            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_MID[2];
+        }
+
+        else if (S_PlayfieldState_Current[column][row].groundHeight == pos_HIGH) {
+            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[0] = vColor_HIGH[0];
+            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[1] = vColor_HIGH[1];
+            vert_BeachPlayfield[editableBlocks[column][row][i]].vColor[2] = vColor_HIGH[2];
+        }
+
+        //}
+    }
 
     //}
 
@@ -179,12 +485,14 @@ void s_playfield_check() {
 
     //----- Note ------ loop through S_PlayfieldState_Pending to see if any tiles have 'updating' set to 'true'
 
+
     updatePlayfield = 0;
 
     for (int column = 0; column < 16; column++)
         for (int row = 0; row < 7; row++) {
             
             if (S_PlayfieldState_Pending[column][row].updating == true) {
+
 
                 s_playfield_update(column, row);
 
@@ -257,52 +565,106 @@ Vector3 SCGet_Playfield_Tile_Position(int column, int row)
     return bottomLeftTile;
 }
 
-bool SC_Set_PlayfieldTile(int column, int row, char update[12])
+u8 SC_Set_PlayfieldTile(int column, int row, char update[12])
 {
-    //char dig[12] = 'Dig';
 
     u8 currentHeight = S_PlayfieldState_Pending[column][row].groundHeight;
 
-    if (strcmp(update, "Dig") == 0) {
+    u8 positions[4];
 
-        switch (currentHeight) {
+    u8 lowCount = 0;
+    u8 midCount = 0;
+    u8 highCount = 0;
+
+    if (editModeState == Landscape) {
+
+        for (int i = 0; i < 4; i++) {
+
+            //if(vert_BeachPlayfield[editableBlocks[column][row][i]].pos[2] != S_PlayfieldState_Pending[column][row].groundHeight){
+
+            positions[i] = vert_BeachPlayfield[editableBlocks[column][row][i]].pos[2];
+
+            if (positions[i] == pos_LOW)
+                lowCount += 1;
+            if (positions[i] == pos_MID)
+                midCount += 1;
+            if (positions[i] == pos_HIGH)
+                highCount += 1;
+
+            //if (!S_PlayfieldState_Current[playfieldCursor.column][playfieldCursor.row].structure.staticModel_LOD[2].glDisplayList) {
+
+            //ert_BeachPlayfield[editableBlocks[column][row][i]].pos[2] = S_PlayfieldState_Pending[column][row].groundHeight;
+        }
+
+
+        u8 sandQty = 0;
+
+        if (strcmp(update, "Dig") == 0) {
+
+            gin64_Audio_SFX_Play("rom:/Dig_silence.wav64");
+
+            if (highCount >= 1)
+                currentHeight = pos_HIGH;
+            else if (midCount >= 1)
+                currentHeight = pos_MID;
+            else
+                currentHeight = pos_LOW;
+
+
+            switch (currentHeight) {
 
             case pos_HIGH:
                 S_PlayfieldState_Pending[column][row].updating = true;
                 S_PlayfieldState_Pending[column][row].groundHeight = pos_MID;
-                return true;
+                return highCount * 2;
             case pos_MID:
                 S_PlayfieldState_Pending[column][row].updating = true;
                 S_PlayfieldState_Pending[column][row].groundHeight = pos_LOW;
-                return true;
+                return midCount * 2;
             case pos_LOW:
                 S_PlayfieldState_Pending[column][row].updating = false;
-                return false;
+                return 0;
+            }
+
+            return 0;
         }
 
-        return false;
-    }
+        else if (strcmp(update, "Fill") == 0) {
 
-    else if (strcmp(update, "Fill") == 0) {
 
-        switch (currentHeight) {
+            gin64_Audio_SFX_Play("rom:/Fill_silence.wav64");
+            if (lowCount >= 1)
+                currentHeight = pos_LOW;
+            else if (midCount >= 1)
+                currentHeight = pos_MID;
+            else
+                currentHeight = pos_HIGH;
+
+
+            switch (currentHeight) {
 
             case pos_LOW:
                 S_PlayfieldState_Pending[column][row].updating = true;
                 S_PlayfieldState_Pending[column][row].groundHeight = pos_MID;
-                return true;
+                return lowCount * 2;
             case pos_MID:
                 S_PlayfieldState_Pending[column][row].updating = true;
                 S_PlayfieldState_Pending[column][row].groundHeight = pos_HIGH;
-                return true;
+                return midCount * 2;
             case pos_HIGH:
                 S_PlayfieldState_Pending[column][row].updating = false;
-                return false;
+                return 0;
+            }
+
+            return 0;
+
         }
+    }
+    else {
 
-        return false;
-
+        S_PlayfieldState_Pending[column][row].updating = false;
+        return 0;
     }
 
-    return false;
+    return 0;
 }

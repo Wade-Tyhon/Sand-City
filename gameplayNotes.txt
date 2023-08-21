@@ -1,6 +1,93 @@
 Sand City Notes
 
 
+
+
+FINAL DAY NOTES
+
+Priority:
+
+
+- Prepare logo for uploading
+	- waiting for the clock skew issue to be fixed - rebuild project after teh break
+	- figure out if I can simply print the logo to the screen without breaking it up manually
+
+- Finish the 'instructions' screen
+- Add in all playfield sound effects
+- Add in different textures for a damaged tower
+- Add in additional graphics for castle types
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- Integrate "g64_GameState" into game to activate or stop from activating certain events
+- Possibly tag each event with a required g64_GameState?
+
+
+
+- Modify Events
+	- Set up functions for "repairing" and "upgrading" structure in "SC_Playfield_Events" 
+	and "SC_Playfield_Manager"
+	- Create a new "expenses" category in citystate to accomodate city expenses
+
+	
+
+
+
+
+
+
+- Project wide
+	- create seperate events for g64_GameState state changes
+	- only open a building menu window if there is an object on that tile
+	- zoom into the tile and load the high LOD model
+	- when a menu window is open, stop all movement for the playfield cursor with 
+SC_GameState.playfieldMenu.active
+	- display basic building stats and edit options
+	
+- In view settings
+	- all the look at point to be adjustable based on the game mode
+- Refine the Title mode scene for "g64_GameState" 
+	- point at the crab character who will be seated on the chair 
+	- create a custom model of the map just for the title screen
+	- pressing start will take you to the playfield 
+- Create the object menu pop up window for "g64_GameState" 
+- Create the pause menu pop up window for "g64_GameState" 
+- Create the crab dialog box pop up window for "g64_GameState" 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+- Set up menu open states...
+
+- Continue working on "SC_PlayfieldOpenMenu_Handler" to set up opening and closing the menu
+ 
+
 08052023
 
 - begin with 'void SC_BuildingEvent_Update() ' inside of 'SC_Playfield_Events'

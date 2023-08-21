@@ -10,6 +10,7 @@
 
 #include "../../../ngin64/nGin64.h"
 
+extern g64_EnvObjectPrefab SC_Empty_PF;
 extern g64_EnvObjectPrefab SC_SimpleTower_PF;
 extern g64_EnvObjectPrefab SC_LargeTower_PF;
 extern g64_EnvObjectPrefab SC_WatchTower_PF;

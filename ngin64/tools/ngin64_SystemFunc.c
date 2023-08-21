@@ -4,7 +4,7 @@
 #include <GL/gl_integration.h>
 #include <malloc.h>
 #include <math.h>
-
+//#include <conio.h>
 #include "../nGin64.h"
 
 
@@ -13,6 +13,18 @@
 
 extern long long timer_ticks();
 
+
+
+bool gin64_EventKeyCheck(char* keyA, char* keyB)
+{
+    //return = strcmp(tempArgs->key, "Select");
+
+    if (strcmp(keyA, keyB) == 0)
+        return true;
+
+    else
+        return false;
+}
 
 float lerp(float val_1, float val_2, float time)
 {
@@ -248,16 +260,65 @@ u8 gin64_GetHour() {
 
 g64_GameTimer gin64_CompareGameTimers(g64_GameTimer timeA, g64_GameTimer timeB) {
     //Note - Return the value with the highest time
-    /*
-    g64_GameTimer compareTime = { timeA.hours - timeB.hours, timeA.minutes - timeB.minutes, timeA.seconds - timeB.seconds };
+    
+    //g64_GameTimer compareTime = { timeA.hours - timeB.hours, timeA.minutes - timeB.minutes, timeA.seconds - timeB.seconds };
+    g64_GameTimer compareTime = { timeB.hours - timeA.hours, timeB.minutes - timeA.minutes, timeB.seconds - timeA.seconds };
 
+
+
+
+
+
+
+    //3:40:15  5:50:35
+
+   // 3:40:15  5:50:35
+  //      - 2 : -10 : -25
+    /*
+    while (compareTime.seconds >= 60) {
+        compareTime.seconds -= 60;
+        compareTime.minutes += 1;
+    }
+
+    while (compareTime.minutes >= 60) {
+        compareTime.minutes -= 60;
+        combineTime.hours += 1;
+    }
+    */
+
+
+    while (compareTime.seconds < 0) {
+        compareTime.seconds += 60;
+        compareTime.minutes -= 1;
+    }
+
+    while (compareTime.minutes < 0) {
+        compareTime.minutes += 60;
+        compareTime.hours -= 1;
+    }
+
+    /*
+    if (compareTime.hours < 0) {
+        compareTime.hours = -compareTime.hours;
+
+    }
+    */
+
+   // if()
+
+
+    /*
     if (compareTime.hours < 0 || compareTime.minutes < 0 || compareTime.seconds < 0)
         return timeA;
 
     else
         return timeB;
         */
-    return timeA;
+
+
+
+
+    return compareTime;
 }
 
 g64_GameTimer gin64_AddGameTimers(g64_GameTimer timeA, g64_GameTimer timeB) {
@@ -278,10 +339,8 @@ g64_GameTimer gin64_AddGameTimers(g64_GameTimer timeA, g64_GameTimer timeB) {
     return combineTime;
 }
 
-
 g64_GameTimer gin64_SetGameTimer(u8 hours, u8 minutes, float seconds) {
 
-    //Note - Return the combined value of the two lengths of time 
     g64_GameTimer newTime = { hours, minutes, seconds};
 
     while (newTime.seconds >= 60) {
@@ -329,29 +388,12 @@ void gin64_Time() {
             g64_GameTime.minutes = 0;
         }
     }
-    
-    /*
-    microseconds += deltatime;
-
-    if (microseconds >= 1000000.0f) {
-        g64_GameTime[2] += 1;
-
-        if (g64_GameTime[2] >= 60) {
-            g64_GameTime[1] += 1;
-            g64_GameTime[2] = 0;
-
-            if (g64_GameTime[1] >= 60) {
-                g64_GameTime[0] += 1;
-                g64_GameTime[1] = 0;
-            }
-        }
-    }
-    */
 
     //g64_GameTime[2] += TIMER_MICROS(newTime - oldTime);
 
-    
+#ifdef DEBUG_NGIN64_SYSTEMFUNC
     fprintf(stderr, "\nTime | %i:%i:%.04f)\n\n", g64_GameTime.hours, g64_GameTime.minutes, g64_GameTime.seconds);
+#endif
 }
 
 
@@ -368,6 +410,13 @@ void gin64_fps() {
         curFrameTimeIndex = 0;
     }
     gFPS = (30 * 1000000.0f) / TIMER_MICROS(newTime - oldTime);
+
+
+
+#ifdef DEBUG_NGIN64_FRAMERATE
+    printf("\e[1;1H\e[2J");
+    fprintf(stderr, "\nFPS | %i)\n", (int)gFPS);
+#endif
 }
 
 
@@ -387,16 +436,22 @@ void gin64_InitDebug() {
 
 
     //display_init(RESOLUTION_320x240, DEPTH_16_BPP, 3, GAMMA_NONE, ANTIALIAS_RESAMPLE);
+
+
+
     rdpq_init();
-    debug_init_isviewer();
-    debug_init_usblog();
+
+    //debug_init_isviewer();
+    //debug_init_usblog();
 
     dfs_init(DFS_DEFAULT_LOCATION);
+
     
     //rdpq_debug_start();
 
     //debugFont = rdpq_font_load("rom:/Pacifico.font64");
     debugFont = rdpq_font_load("rom:/BRLNSDB.font64");
+
 }
 
 extern surface_t* disp;
@@ -417,7 +472,7 @@ void gin64_ResetTriCounter() {
 extern int itemToPlace;
 
 void gin64_UpdateDebug() {
-
+    /*
     rdpq_font_begin(RGBA32(58, 138, 127, 255));
     rdpq_font_position(20, 30);
 
@@ -431,6 +486,7 @@ void gin64_UpdateDebug() {
     rdpq_font_print(debugFont, debugStringB);
 
     rdpq_font_end();
+    */
 
 }
 

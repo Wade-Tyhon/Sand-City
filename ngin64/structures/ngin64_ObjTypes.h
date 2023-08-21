@@ -60,13 +60,16 @@ typedef struct
 typedef struct
 {
 	GameObject obj; //pointer to game object (pos, rot, scl)
-	StaticModel staticModel; //pointer to display List
-
+	StaticModel staticModel; //pointer to display List	
 	StaticModel staticModel_LOD[3]; //pointer to display List     
 	TriggerBox trigBox;
 	MeshColliderObj* groundCollider;
 	MeshColliderObj* wallCollider;
-
+	g64_GameTimer buildTime; //The time this structure was built, used to calculate rate of decay
+	u8 jobs[2]; // Min and Max number of jobs for object type
+	u8 residents[2]; // Min and Max residents for object type
+	u8 mood[2]; // Min and Max mood of residents
+	char* alert; //text alert to take a look at
 	u8 pointsH;
 	u8 pointsB;
 	u8 pointsC;
@@ -78,7 +81,21 @@ typedef struct
 }g64_EnvObjectPrefab;
 
 
+typedef struct
+{
+	GameObject obj; //pointer to game object (pos, rot, scl)
+	StaticModel staticModel; //pointer to display List	
+	StaticModel staticModel_LOD[3]; //pointer to display List     
+	TriggerBox trigBox;
+	MeshColliderObj* groundCollider;
+	MeshColliderObj* wallCollider;
+	g64_GameTimer buildTime; //The time this structure was built, used to calculate rate of decay
+	//short *wallColMeshSize;
+	//MeshCollider *wallMeshCol; //vertex positions of collision (float, float, float)
+	//MeshColliderTri *wallColTri; //collision mesh triangles (int,int,int)
 
+//	Gfx* DL; //pointer to display list for object	
+}g64_NPCObjectPrefab;
 
 
 
@@ -88,13 +105,14 @@ typedef struct {
 	//Vector2 activeTile;
 	int column;
 	int row;
+	GameObject obj; //Note:pointer to game object (pos, rot, scl)
 	Vector3 pos;
 }CursorObject;
 
 typedef struct
 {
 	GameObject obj; //Note:pointer to game object (pos, rot, scl)
-	GameObject* camLook; //Note: GameObject pointer of object camera is currently looking at (ex player character)
+	GameObject* camFollow; //Note: GameObject pointer of object camera is currently following
 	Vector3 camLookPoint;
 	Vector3 cameraOffset; //Note: distance to offset from "camLook"
 	Vector3 nextPosition; //Note: distance to offset from "camLook"

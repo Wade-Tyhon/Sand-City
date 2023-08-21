@@ -4,6 +4,7 @@
 #include <GL/gl_integration.h>
 #include <malloc.h>
 #include <math.h>
+#include <stdlib.h>
 
 #include "../ngin64/nGin64.h"
 #include "SC_Interface.h"
@@ -31,6 +32,12 @@ extern cityState city;
 
 
 void SC_PlayfieldTaxEvents_Update();
+
+void SC_PlayfieldErosion_Update(g64_EventArgs* tempArgs);
+void SC_PlayfieldJobsCheck_Update(g64_EventArgs* tempArgs);
+void SC_PlayfieldResidentsCheck_Update(g64_EventArgs* tempArgs);
+
+
 void SC_PlayfieldSalesTax_Update(g64_EventArgs* tempArgs);
 void SC_PlayfieldPropertyTax_Update(g64_EventArgs* tempArgs);
 void SC_PlayfieldBuildEvent(g64_EventArgs* tempArgs);
@@ -48,19 +55,29 @@ void SC_Playfield_Cursor_Init() {
 
     gin64_Event_Subscribe(&SalesTaxEvent.OnTimerEnd, &SC_PlayfieldSalesTax_Update);
     gin64_Event_Subscribe(&PropertyTaxEvent.OnTimerEnd, &SC_PlayfieldPropertyTax_Update);
+
+    gin64_Event_Subscribe(&ErosionEvent.OnTimerEnd, &SC_PlayfieldErosion_Update);
+    gin64_Event_Subscribe(&JobsCheckEvent.OnTimerEnd, &SC_PlayfieldJobsCheck_Update);
+    gin64_Event_Subscribe(&ResidentCheckEvent.OnTimerEnd, &SC_PlayfieldResidentsCheck_Update);
+
+
+
+
     gin64_Event_Subscribe(&BuildObjectEvent.OnTrigger, &SC_PlayfieldBuildEvent);
     gin64_Event_Subscribe(&LandscapeEvent.OnTrigger, &SC_PlayfieldLandscapeEvent);
 
+   // gin64_Event_Subscribe(&BuildMenuEvent.OnTrigger, &BuildMenuEvent);
+    //gin64_Event_Subscribe(&BuildMenuEvent.OnCompletion, &BuildMenuEvent);
 
     //LandscapeEvent
 
     //----- Note ----- initiate the state of the city
 
-    city.propertyTaxRate = 2;
-    city.salesTaxRate = 1;
-    city.residents = 0;
-    city.buildings = 0;
-    city.mood = 10;
+    SC_CityStats.propertyTaxRate = 2;
+    SC_CityStats.salesTaxRate = 1;
+    SC_CityStats.residents = 0;
+    SC_CityStats.buildings = 0;
+    SC_CityStats.mood = 1;
 
 
     #ifdef DEBUG_NGIN64_INTERFACE
@@ -75,10 +92,10 @@ void SC_Playfield_Cursor_Init() {
 
 void SC_Playfield_Control_Movement() {   
 
-                playfieldCursor.pos = SCGet_Playfield_Tile_Position(playfieldCursor.column, playfieldCursor.row);
+                playfieldCursor.obj.pos = SCGet_Playfield_Tile_Position(playfieldCursor.column, playfieldCursor.row);
 
                 #ifdef DEBUG_NGIN64_INTERFACE
-                                fprintf(stderr, "\n > New Cursor Position: X %.2f | Y %.2f | Z %.2f\n", (playfieldCursor.pos.x), (playfieldCursor.pos.y), (playfieldCursor.pos.z));
+                                fprintf(stderr, "\n > New Cursor Position: X %.2f | Y %.2f | Z %.2f\n", (playfieldCursor.obj.pos.x), (playfieldCursor.obj.pos.y), (playfieldCursor.obj.pos.z));
                 #endif
 
 
@@ -136,16 +153,21 @@ void SC_Playfield_Cursor_Update() {
 	    fprintf(stderr, "\n > RUN SC_Playfield_Control_Update!\n");
     #endif
 
-        if(directionHold == false){
 
-            if( g64_Pad[0].Press.D_Right == 1){
+
+        if (SC_GameState.playfieldMenu.active) //If a playfield object menu is active, do not run this script
+            return;
+        
+        if (directionHold == false) {
+
+            if (g64_Pad[0].Press.D_Right == 1) {
                 if ((playfieldCursor.column + 1) <= 15)
                     playfieldCursor.column += 1;
                 else
                     playfieldCursor.column = 0;
             }
 
-            else if (g64_Pad[0].Press.D_Left == 1){
+            else if (g64_Pad[0].Press.D_Left == 1) {
                 if ((playfieldCursor.column - 1) >= 0)
                     playfieldCursor.column -= 1;
                 else
@@ -170,7 +192,7 @@ void SC_Playfield_Cursor_Update() {
         }
 
         else if (directionHold == true) {
-            
+
             if (gin64_GetPlaybackTick(10) - previousFrame >= updateRate)
             {
                 previousFrame = gin64_GetPlaybackTick(10);
@@ -223,13 +245,13 @@ void SC_Playfield_Cursor_Update() {
 
             inputTimer += gin64_GetDeltaTime();
 
-            if (inputTimer >= 0.2200){
+            if (inputTimer >= 0.2200) {
                 updateRate = 1;
                 directionHold = true;
             }
 
         }
-            
+
         if (g64_Pad[0].Dpad.x == 0 && g64_Pad[0].Dpad.y == 0 && inputTimer >= 0.1) {
 
             inputTimer = 0;
@@ -243,7 +265,7 @@ void SC_Playfield_Cursor_Update() {
             updateRate = 2;
             directionHold = false;
         }
-
+        
 
 
         #ifdef DEBUG_NGIN64_INTERFACE
@@ -254,11 +276,18 @@ void SC_Playfield_Cursor_Update() {
 
         //SC_Playfield_Control_Movement();
 
-        playfieldCursor.pos = SCGet_Playfield_Tile_Position(playfieldCursor.column, playfieldCursor.row);
+        playfieldCursor.obj.pos = SCGet_Playfield_Tile_Position(playfieldCursor.column, playfieldCursor.row);
 
         #ifdef DEBUG_NGIN64_INTERFACE
-                fprintf(stderr, "\n > New Cursor Position: X %.2f | Y %.2f | Z %.2f\n", (playfieldCursor.pos.x), (playfieldCursor.pos.y), (playfieldCursor.pos.z));
+                fprintf(stderr, "\n > New Cursor Position: X %.2f | Y %.2f | Z %.2f\n", (playfieldCursor.obj.pos.x), (playfieldCursor.obj.pos.y), (playfieldCursor.obj.pos.z));
         #endif
+
+
+                // 42949672
+       //unsigned int tempRandNum = (RAND_MAX + 1u) / 40;
+
+              //  unsigned int tempRandNum = rand() / (RAND_MAX / 450 + 1);
+      // fprintf(stderr, "\n\n--------\n!!! RANDOM NUMBER TEST %i !!! \n--------\n\n", tempRandNum);
 }
 
 
@@ -283,7 +312,7 @@ void SC_Playfield_Cursor_Draw() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
-    glTranslatef((playfieldCursor.pos.x), (playfieldCursor.pos.y), (playfieldCursor.pos.z));
+    glTranslatef((playfieldCursor.obj.pos.x), (playfieldCursor.obj.pos.y), (playfieldCursor.obj.pos.z));
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
     glDisable(GL_CULL_FACE);
@@ -312,152 +341,356 @@ void SC_Playfield_Cursor_Draw() {
 }
 
 void SC_PlayfieldLandscapeEvent(g64_EventArgs* tempArgs) {
-    
+
     bool completed = false;
-  
-    switch (landscapeTypeState) {
+    u8 sandVolume = 0;
 
-        case 1: //Ground adjustment
-                if (strcmp(tempArgs->key, "Dig") == 0){
-                    completed = SC_Set_PlayfieldTile(playfieldCursor.column, playfieldCursor.row, tempArgs->key);
-                    if (completed)
-                        player.mat_sand += 10; //use up your source of sand to create a hill
+    //----- Note ----- Confirm that no object is currently built on this tile
+    if (!S_PlayfieldState_Current[playfieldCursor.column][playfieldCursor.row].structure.staticModel_LOD[2].glDisplayList) {
+
+        switch (landscapeTypeState) {
+
+            case 1: //Ground adjustment
+                if (strcmp(tempArgs->key, "Dig") == 0) {
+                    sandVolume = SC_Set_PlayfieldTile(playfieldCursor.column, playfieldCursor.row, tempArgs->key);
+                    //if (sandVolume > 0)
+                    SC_CityStats.mat_sand += sandVolume; //use up your source of sand to create a hill
                 }
 
-                if ((strcmp(tempArgs->key, "Fill") == 0) && (player.mat_sand - 10 >= 0)) {
-                    completed = SC_Set_PlayfieldTile(playfieldCursor.column, playfieldCursor.row, tempArgs->key);
-                    if (completed)
-                        player.mat_sand -= 10; //use up your source of sand to create a hill
+                if ((strcmp(tempArgs->key, "Fill") == 0) && (SC_CityStats.mat_sand - 8 >= 0)) {
+                    sandVolume = SC_Set_PlayfieldTile(playfieldCursor.column, playfieldCursor.row, tempArgs->key);
+                    //if (sandVolume > 0)
+                    SC_CityStats.mat_sand -= sandVolume; //use up your source of sand to create a hill
                 }
 
-            break;
+                break;
 
-        case 2:
-                fprintf(stderr, "\n\n--------\n!!! Fill Water Event !!! \n--------\n\n");
-                fprintf(stderr, "\n\n--------\n!!! Fill Water Event !!! \n--------\n\n");
-                fprintf(stderr, "\n\n--------\n!!! Fill Water Event !!! \n--------\n\n");
-                fprintf(stderr, "\n\n--------\n!!! Fill Water Event !!! \n--------\n\n");
-            break;
+            case 2:
+             ////   fprintf(stderr, "\n\n--------\n!!! Fill Water Event !!! \n--------\n\n");
+             //   fprintf(stderr, "\n\n--------\n!!! Fill Water Event !!! \n--------\n\n");
+             //   fprintf(stderr, "\n\n--------\n!!! Fill Water Event !!! \n--------\n\n");
+            //    fprintf(stderr, "\n\n--------\n!!! Fill Water Event !!! \n--------\n\n");
+                break;
 
-        default: //Water Fill / Drain
-            //Do nothing
-            break;
+            default: //Water Fill / Drain
+                //Do nothing
+                break;
 
-    }
+            }
+        }
+    
     
 }
 
 
 void SC_PlayfieldBuildEvent(g64_EventArgs* tempArgs) {
-    fprintf(stderr, "\n\n--------\n!!! Place Object Event !!! \n--------\n\n");
+ //   fprintf(stderr, "\n\n--------\n!!! Place Object Event !!! \n--------\n\n");
 
-    switch (buildingTypeState) {
-
-        case 1: //Build a small tower
-            //fprintf(stderr, "\n\n--------\n!!! Place Object !!! \n--------\n\n");
-            if ((SC_SimpleTower_PF.pointsB <= player.mat_sand) && (SC_SimpleTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_SimpleTower_PF;
-                player.mat_sand -= SC_SimpleTower_PF.pointsB; // source the raw materials for this with sand
-                player.mat_shells -= SC_SimpleTower_PF.pointsC; // pay for this build with shells
-                city.residents += 2;
-                city.buildings += 1;
-            }
-        
-            break;
-
-        case 2: //Build a large tower
-            if ((SC_LargeTower_PF.pointsB <= player.mat_sand) && (SC_LargeTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_LargeTower_PF;
-                player.mat_sand -= SC_LargeTower_PF.pointsB; // source the raw materials for this with sand
-                player.mat_shells -= SC_LargeTower_PF.pointsC; // pay for this build with shells
-                city.residents += 4;
-                city.buildings += 1;
-            }
-            break;
-
-        case 3: //Build a watch tower
-            if ((SC_WatchTower_PF.pointsB <= player.mat_sand) && (SC_WatchTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_WatchTower_PF;
-                player.mat_sand -= SC_WatchTower_PF.pointsB; // source the raw materials for this with sand
-                player.mat_shells -= SC_WatchTower_PF.pointsC; // pay for this build with shells
-                city.residents += 1;
-                city.buildings += 1;
-            }
-            break;
+    /*
+    if (editModeState == Building && (strcmp(name, "Building") == 0)) {
+        thisEvent->args.trigger = true;
+        sprintf(thisEvent->args.key, "Demolish");
+    }
+    */
+    if (strcmp(tempArgs->key, "BuildMenu") == 0) {
+    
+        //Wait for input and display edit screen
 
 
-        case 4: //Build an office tower
-            if ((SC_OfficeTower_PF.pointsB <= player.mat_sand) && (SC_OfficeTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_OfficeTower_PF;
-                player.mat_sand -= SC_OfficeTower_PF.pointsB; // source the raw materials for this with sand
-                player.mat_shells -= SC_OfficeTower_PF.pointsC; // pay for this build with shells
-                city.residents += 0;
-                city.buildings += 1;
-            }
-            break;
 
-        case 5: //Build an office tower
-            if ((SC_OfficeTower_PF.pointsB <= player.mat_sand) && (SC_OfficeTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_OfficeTower_PF;
-                player.mat_sand -= SC_OfficeTower_PF.pointsB; // source the raw materials for this with sand
-                player.mat_shells -= SC_OfficeTower_PF.pointsC; // pay for this build with shells
-                city.residents += 0;
-                city.buildings += 1;
-            }
-            break;
-
-            //
-        case 6: //Build a high density residential tower
-            if ((SC_ResidentialTower_PF.pointsB <= player.mat_sand) && (SC_ResidentialTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_ResidentialTower_PF;
-                player.mat_sand -= SC_ResidentialTower_PF.pointsB; // source the raw materials for this with sand
-                player.mat_shells -= SC_ResidentialTower_PF.pointsC; // pay for this build with shells
-                city.residents += 10;
-                city.buildings += 3;
-            }
-            break;
-
-            //----- Note ----- placeholder until all other models are completed
-        default:
-            if ((SC_LargeTower_PF.pointsB <= player.mat_sand) && (SC_LargeTower_PF.pointsC <= player.mat_shells)) { //Check to make sure you have enough materials to build
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
-                S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_LargeTower_PF;
-                player.mat_sand -= SC_LargeTower_PF.pointsB; // source the raw materials for this with sand
-                player.mat_shells -= SC_LargeTower_PF.pointsC; // pay for this build with shells
-                city.residents += 4;
-                city.buildings += 1;
-            }
-            break;
     }
 
+    if (strcmp(tempArgs->key, "Build") == 0) {
+
+
+        g64_GameTimer currentTime = gin64_GetGameTime(); //Get the current starting time
+
+        if (!S_PlayfieldState_Current[playfieldCursor.column][playfieldCursor.row].structure.staticModel_LOD[2].glDisplayList) {
+            switch (buildingTypeState) {
+
+            case 1: //Build a small tower
+                //fprintf(stderr, "\n\n--------\n!!! Place Object !!! \n--------\n\n");
+                if ((SC_SimpleTower_PF.pointsB <= SC_CityStats.mat_sand) && (SC_SimpleTower_PF.pointsC <= SC_CityStats.mat_shells)) { //Check to make sure you have enough materials to build
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_SimpleTower_PF;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.buildTime = gin64_SetGameTimer(currentTime.hours, currentTime.minutes, currentTime.seconds);
+                    SC_CityStats.mat_sand -= SC_SimpleTower_PF.pointsB; // source the raw materials for this with sand
+                    SC_CityStats.mat_shells -= SC_SimpleTower_PF.pointsC; // pay for this build with shells
+                    SC_CityStats.residents += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.residents[0];
+                    SC_CityStats.jobs += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.jobs[0];
+                    SC_CityStats.buildings += 1;
+                    
+                }
+
+                break;
+
+            case 2: //Build a large tower
+                if ((SC_LargeTower_PF.pointsB <= SC_CityStats.mat_sand) && (SC_LargeTower_PF.pointsC <= SC_CityStats.mat_shells)) { //Check to make sure you have enough materials to build
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_LargeTower_PF;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.buildTime = gin64_SetGameTimer(currentTime.hours, currentTime.minutes, currentTime.seconds);
+                    SC_CityStats.mat_sand -= SC_LargeTower_PF.pointsB; // source the raw materials for this with sand
+                    SC_CityStats.mat_shells -= SC_LargeTower_PF.pointsC; // pay for this build with shells
+                    SC_CityStats.residents += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.residents[0];
+                    SC_CityStats.jobs += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.jobs[0];
+                    SC_CityStats.buildings += 1;
+                }
+                break;
+
+            case 3: //Build a watch tower
+
+
+                if ((SC_WatchTower_PF.pointsB <= SC_CityStats.mat_sand) && (SC_WatchTower_PF.pointsC <= SC_CityStats.mat_shells)) { //Check to make sure you have enough materials to build
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_WatchTower_PF;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.buildTime = gin64_SetGameTimer(currentTime.hours, currentTime.minutes, currentTime.seconds);
+                    SC_CityStats.mat_sand -= SC_WatchTower_PF.pointsB; // source the raw materials for this with sand
+                    SC_CityStats.mat_shells -= SC_WatchTower_PF.pointsC; // pay for this build with shells
+                    SC_CityStats.residents += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.residents[0];
+                    SC_CityStats.jobs += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.jobs[0];
+                    SC_CityStats.buildings += 1;
+                }
+                break;
+
+
+            case 4: //Build an office tower
+                if ((SC_OfficeTower_PF.pointsB <= SC_CityStats.mat_sand) && (SC_OfficeTower_PF.pointsC <= SC_CityStats.mat_shells)) { //Check to make sure you have enough materials to build
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_OfficeTower_PF;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.buildTime = gin64_SetGameTimer(currentTime.hours, currentTime.minutes, currentTime.seconds);
+                    SC_CityStats.mat_sand -= SC_OfficeTower_PF.pointsB; // source the raw materials for this with sand
+                    SC_CityStats.mat_shells -= SC_OfficeTower_PF.pointsC; // pay for this build with shells
+                    SC_CityStats.residents += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.residents[0];
+                    SC_CityStats.jobs += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.jobs[0];
+                    SC_CityStats.buildings += 1;
+                }
+                break;
+
+            case 5: //Build an office tower
+                if ((SC_OfficeTower_PF.pointsB <= SC_CityStats.mat_sand) && (SC_OfficeTower_PF.pointsC <= SC_CityStats.mat_shells)) { //Check to make sure you have enough materials to build
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_OfficeTower_PF;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.buildTime = gin64_SetGameTimer(currentTime.hours, currentTime.minutes, currentTime.seconds);
+                    SC_CityStats.mat_sand -= SC_OfficeTower_PF.pointsB; // source the raw materials for this with sand
+                    SC_CityStats.mat_shells -= SC_OfficeTower_PF.pointsC; // pay for this build with shells
+                    SC_CityStats.residents += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.residents[0];
+                    SC_CityStats.jobs += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.jobs[0];
+                    SC_CityStats.buildings += 1;
+                }
+                break;
+
+                //
+            case 6: //Build a high density residential tower
+                if ((SC_ResidentialTower_PF.pointsB <= SC_CityStats.mat_sand) && (SC_ResidentialTower_PF.pointsC <= SC_CityStats.mat_shells)) { //Check to make sure you have enough materials to build
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_ResidentialTower_PF;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.buildTime = gin64_SetGameTimer(currentTime.hours, currentTime.minutes, currentTime.seconds);
+                    SC_CityStats.mat_sand -= SC_ResidentialTower_PF.pointsB; // source the raw materials for this with sand
+                    SC_CityStats.mat_shells -= SC_ResidentialTower_PF.pointsC; // pay for this build with shells
+                    SC_CityStats.residents += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.residents[0];
+                    SC_CityStats.jobs += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.jobs[0];
+                    SC_CityStats.buildings += 3;
+                }
+                break;
+
+                //----- Note ----- placeholder until all other models are completed
+            default:
+                if ((SC_LargeTower_PF.pointsB <= SC_CityStats.mat_sand) && (SC_LargeTower_PF.pointsC <= SC_CityStats.mat_shells)) { //Check to make sure you have enough materials to build
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_LargeTower_PF;
+                    S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.buildTime = gin64_SetGameTimer(currentTime.hours, currentTime.minutes, currentTime.seconds);
+                    SC_CityStats.mat_sand -= SC_LargeTower_PF.pointsB; // source the raw materials for this with sand
+                    SC_CityStats.mat_shells -= SC_LargeTower_PF.pointsC; // pay for this build with shells
+                    SC_CityStats.residents += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.residents[0];
+                    SC_CityStats.jobs += S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.jobs[0];
+                    SC_CityStats.buildings += 1;
+                }
+                break;
+            }
+        }
+
+    }
     S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.obj.pos = SCGet_Playfield_Tile_Position(playfieldCursor.column, playfieldCursor.row);
 
 }
 
+
+
+
+
+void SC_PlayfieldModifyEvent(char* keyWord) {
+
+    //char tempKeyWord[16];
+    //fprintf(stderr, "\n\n--------\n!!! %s Object Event !!! \n--------\n\n", keyWord);
+    //sprintf(tempKeyWord, keyWord);
+
+
+    if (gin64_EventKeyCheck(keyWord, "Repair")){
+
+    //    fprintf(stderr, "\n\n--------\n!!! Repair Object Event !!! \n--------\n\n");
+
+        S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+        S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_Empty_PF;
+        SC_CityStats.mat_sand += (SC_SimpleTower_PF.pointsB * .5f); // source the raw materials for this with sand
+        SC_CityStats.mat_shells -= (SC_SimpleTower_PF.pointsC * .5f); // pay for this build with shells
+        SC_CityStats.residents -= S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.residents[0];
+        SC_CityStats.jobs -= S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.jobs[0];
+        SC_CityStats.buildings -= 1;
+
+    }
+
+    else if (gin64_EventKeyCheck(keyWord, "Upgrade")){
+
+      //  fprintf(stderr, "\n\n--------\n!!! Upgrade Object Event !!! \n--------\n\n");
+
+    }
+
+    else if (gin64_EventKeyCheck(keyWord, "Demolish")){
+
+        if (S_PlayfieldState_Current[playfieldCursor.column][playfieldCursor.row].structure.staticModel_LOD[2].glDisplayList) {
+         //   fprintf(stderr, "\n\n--------\n!!! Demolish Object Event !!! \n--------\n\n");
+
+            S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].updating = true;
+            S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure = SC_Empty_PF;
+            SC_CityStats.mat_sand += (SC_SimpleTower_PF.pointsB * .5f); // source the raw materials for this with sand
+            SC_CityStats.mat_shells -= (SC_SimpleTower_PF.pointsC * .5f); // pay for this build with shells
+            SC_CityStats.residents -= S_PlayfieldState_Current[playfieldCursor.column][playfieldCursor.row].structure.residents[0];
+            SC_CityStats.jobs -= S_PlayfieldState_Pending[playfieldCursor.column][playfieldCursor.row].structure.jobs[0];
+            SC_CityStats.buildings -= 1;
+            //SC_CityStats.residents -= 1;
+
+        }
+
+    }
+
+    //tempKeyWord
+
+
+
+
+
+
+    //S_PlayfieldState_Current
+        
+
+
+  //  fprintf(stderr, "\n\n--------\n!!! %s Object Event !!! \n--------\n\n", keyWord);
+ //   fprintf(stderr, "\n\n--------\n!!! %s Object Event !!! \n--------\n\n", keyWord);
+  //  fprintf(stderr, "\n\n--------\n!!! %s Object Event !!! \n--------\n\n", keyWord);
+}
+
+#define RAN_N_RANGE 450
+#define RAN_N_RANGEB 1000
+
+void SC_PlayfieldJobsCheck_Update(g64_EventArgs* tempArgs) {
+
+   // g64_GameTimer currentTime = gin64_GetGameTime(); //Get the current starting time
+
+    unsigned int tempRandNum;   
+
+    for (int column = 0; column < 16; column++){
+        for (int row = 0; row < 7; row++) {
+
+            if (S_PlayfieldState_Current[column][row].structure.staticModel_LOD[2].glDisplayList) {
+
+                tempRandNum = rand() / (RAND_MAX / RAN_N_RANGE + 1);
+                //fprintf(stderr, "\n\n--------\n!!! RANDOM NUMBER TEST %i !!! \n--------\n\n", tempRandNum);
+
+                if (tempRandNum >= (RAN_N_RANGE * .55f) && (S_PlayfieldState_Current[column][row].structure.jobs[0] < S_PlayfieldState_Current[column][row].structure.jobs[1])){
+                    S_PlayfieldState_Current[column][row].structure.jobs[0] += 1;
+                    SC_CityStats.jobs += 1;
+                }
+            }
+        }
+
+    }
+}
+
+void SC_PlayfieldResidentsCheck_Update(g64_EventArgs* tempArgs) {
+
+    unsigned int tempRandNum;
+    unsigned int jobsBoost;
+
+    for (int column = 0; column < 16; column++) {
+        for (int row = 0; row < 7; row++) {
+
+            if (S_PlayfieldState_Current[column][row].structure.staticModel_LOD[2].glDisplayList) {
+
+                tempRandNum = rand() / (RAND_MAX / RAN_N_RANGEB + 1);
+                jobsBoost = (SC_CityStats.jobs - SC_CityStats.residents)*10;
+
+                //fprintf(stderr, "\n\n--------\n!!! RANDOM NUMBER TEST %i !!! \n--------\n\n", tempRandNum);
+
+                if (tempRandNum + jobsBoost >= (RAN_N_RANGE * .45f) && (S_PlayfieldState_Current[column][row].structure.residents[0] < S_PlayfieldState_Current[column][row].structure.residents[1])){
+                    S_PlayfieldState_Current[column][row].structure.residents[0] += 1;
+                    SC_CityStats.residents += 1;
+                }
+            }
+        }
+
+    }
+}
+
+
+void SC_PlayfieldErosion_Update(g64_EventArgs* tempArgs) {
+    
+    g64_GameTimer currentTime = gin64_GetGameTime(); //Get the current starting time
+
+    for (int column = 0; column < 16; column++)
+        for (int row = 0; row < 7; row++) {
+            g64_GameTimer timeDifference;
+            if(S_PlayfieldState_Current[column][row].structure.staticModel_LOD[2].glDisplayList){
+
+                //S_PlayfieldState_Current[playfieldCursor.column][playfieldCursor.row].structure.buildTime;
+
+                timeDifference = gin64_CompareGameTimers(S_PlayfieldState_Current[column][row].structure.buildTime, currentTime);
+
+                //----- Note ----- Calculate the total number of seconds that has passed
+                float secondsElapsed = (timeDifference.minutes * 60) + timeDifference.seconds;
+
+                if (secondsElapsed >= 45.0f) {
+                    //gin64_CompareGameTimers(S_PlayfieldState_Current[playfieldCursor.column][playfieldCursor.row].structure.pointsH -= 1);
+                    S_PlayfieldState_Current[column][row].structure.pointsH -= 1;
+                //    fprintf(stderr, "\n\n--------\n!!! Time Difference: %i : %i : %.2f !!! \n--------\n\n", timeDifference.hours, timeDifference.minutes, timeDifference.seconds);
+                 //   fprintf(stderr, "\n\n--------\n!!! Resetting to: %i : %i : %.2f !!! \n--------\n\n", currentTime.hours, currentTime.minutes, currentTime.seconds);
+
+                    //----- Note ----- Reset build time
+                    S_PlayfieldState_Current[column][row].structure.buildTime = gin64_SetGameTimer(currentTime.hours, currentTime.minutes, currentTime.seconds);
+                }
+
+            }
+
+        }
+    
+    /*
+    int salesTaxIncome = (1 + (SC_CityStats.mood * .25)) * (SC_CityStats.residents * SC_CityStats.salesTaxRate);
+
+    if (SC_CityStats.mat_shells + salesTaxIncome < 10000)
+        SC_CityStats.mat_shells += salesTaxIncome;
+    else
+        SC_CityStats.mat_shells = 99999;
+        */
+}
+
+
 void SC_PlayfieldSalesTax_Update(g64_EventArgs* tempArgs) {
 
-    int salesTaxIncome = (1 + (city.mood * .25)) * (city.residents * city.salesTaxRate);
+    int salesTaxIncome = (1 + (SC_CityStats.mood * .25)) * (SC_CityStats.residents * SC_CityStats.salesTaxRate);
 
-    if(player.mat_shells + salesTaxIncome < 10000)
-        player.mat_shells += salesTaxIncome;
+    if(SC_CityStats.mat_shells + salesTaxIncome < 10000)
+        SC_CityStats.mat_shells += salesTaxIncome;
     else
-        player.mat_shells = 99999;
+        SC_CityStats.mat_shells = 99999;
     
 }
 
 void SC_PlayfieldPropertyTax_Update(g64_EventArgs* tempArgs) {
 
-    int propTaxIncome = (2 * (city.buildings * city.propertyTaxRate));
+    int propTaxIncome = (2 * (SC_CityStats.buildings * SC_CityStats.propertyTaxRate));
 
-    if (player.mat_sand + propTaxIncome < 1000)
-        player.mat_sand += propTaxIncome;
+    if (SC_CityStats.mat_sand + propTaxIncome < 1000)
+        SC_CityStats.mat_sand += propTaxIncome;
     else
-        player.mat_sand = 999;
+        SC_CityStats.mat_sand = 999;
 
 }

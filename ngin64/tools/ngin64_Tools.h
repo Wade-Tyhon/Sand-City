@@ -11,6 +11,7 @@
 	extern void gin64_SetDeltaTime();
 	extern float gin64_GetDeltaTime();
 
+	extern bool gin64_EventKeyCheck(char* keyA, char* keyB);
 
 
 	/*-------------------------------NGin64 Transform Functions---------------------------*/

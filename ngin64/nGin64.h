@@ -2,6 +2,7 @@
 #ifndef NGIN64_H
 #define NGIN64_H
 
+#define NDEBUG
 
 #include <libdragon.h>
 #include <GL/gl.h>
@@ -14,12 +15,12 @@
 #include "structures/ngin64_ColTypes.h"
 #include "structures/ngin64_ObjTypes.h"
 #include "structures/ngin64_InputTypes.h"
-
+#include "gui/ngin64_GUI_Types.h"
 #include "events/ngin64_EventTypes.h"
 
 #include "audio/ngin64_XMAudio_Defs.h"
 
-#include "gui/ngin64_GUI_Types.h"
+
 
 #include "tools/ngin64_Tools.h"
 
@@ -33,7 +34,10 @@
 /* ----- NOTE ----- In order to keep your UNFLoader output clean, enable only the function
                     sets that you want to debug. Comment out the ones that you do not need to debug*/
 
-#define DEBUG_NGIN64_SYSTEMFUNC
+
+//#define DEBUG_NGIN64_FRAMERATE
+
+//#define DEBUG_NGIN64_SYSTEMFUNC
 
 //#define DEBUG_NGIN64_INTERFACE
 
@@ -53,6 +57,10 @@ extern g64_GameplayInput gameInput;
 
 extern CameraObject mainCamera;
 extern ViewSettings viewSettings;
+
+
+
+extern g64_GameFlags SC_GameFlags;
 
 extern g64_GameTimer gin64_GetGameTime();
 extern g64_GameTimer gin64_AddGameTimers(g64_GameTimer timeA, g64_GameTimer timeB);
@@ -79,6 +87,8 @@ extern void gin64_GUI_Button_Init();
 int gin64_GetPlaybackTick(int playbackRate); 
 
 /*------------------------------ Game Project Custom User Structures ---------------------------------*/
+
+extern g64_GameState SC_GameState;
 
 extern playfieldState S_PlayfieldState_Current[16][7];
 extern CursorObject playfieldCursor;

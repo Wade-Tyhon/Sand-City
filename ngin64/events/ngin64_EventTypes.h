@@ -1,7 +1,14 @@
 #ifndef NGIN64_EVENTTYPES_H
 #define NGIN64_EVENTTYPES_H
 
+
+
 #include <stdarg.h>
+
+
+#include "../nGin64.h"
+#include "../gui/ngin64_GUI_Types.h"
+
 #define BIT(x) (1 << x) //Note - allow an event type to belong to different categories
 
 
@@ -21,6 +28,7 @@ enum g64_PlayfieldState {
 
 typedef struct {
     bool trigger;
+    bool constTrigger;
     int i[3];
     float f[3];
     g64_GameTimer time;
@@ -65,46 +73,6 @@ typedef struct {
     
 }g64_GUIEvent;
 
-/*
-typedef struct {
-    char* name;
-    //g64_EventType* type;
-    g64_EventArgs args;
-    //g64_EventHandler* handler;
-    void (*handlerFunc)();
-    g64_EventListeners listeners[10];
-} g64_Event;
-*/
-
-
-
-/*
-
-enum g64_BuildingTypeState {
-
-    NoBuildingType,
-    SmallTower, LargeTower,
-    WatchTower, Lighthouse,
-    OfficeBuilding, Condomenium,
-    PowerPlant, Walls,
-    BuildingTypeSize
-
-};
-
-enum g64_PlayfieldEventState {
-
-    NoState,
-    Build, Demolish, Repair,
-    Examine,
-    Dig, Fill,
-    EndState
-};
-*/
-
-
-
-
-//enum g64_PlayfieldEventState playfieldEventState;
 
 typedef struct {
     //bool activate;
@@ -184,7 +152,7 @@ extern void gin64_GUIEvents_Subscribe(g64_GUIEvent* guiEvent, void(*listenerFunc
 //extern void gin64_Events_Update(g64_TimeEvent* timeEvent);
 extern void gin64_Events_Update();
 extern void gin64_TimeEvent_Set(char* name, g64_TimeEvent* timeEvent, g64_GameTimer timerLength, bool loopEvent);
-extern void gin64_GUIEvent_Set(char* name, g64_GUIEvent* guiEvent, g64_GameTimer timerLength, CursorObject* cursor);
+//extern void gin64_GUIEvent_Set(char* name, g64_GUIEvent* guiEvent, CursorObject* cursor, void(*handlerFunction));
 
 extern bool gin64_PlayfieldEvent_Init(g64_PlayfieldEvent* playfieldEvent);
 

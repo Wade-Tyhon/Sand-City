@@ -7,6 +7,8 @@
 
 #include "../ngin64/nGin64.h"
 
+#include "SC_Scene_Defs.h"
+
 //extern draw_beach_items();
 
 
@@ -43,7 +45,7 @@
 
 
 
-
+/*
 //----- Init functions -----
 extern void s_playfield_init(); //initiate the scene playfield to be its default state
 extern void s_playfield_check();
@@ -59,8 +61,10 @@ extern void draw_castle_watchtower();
 
 extern void SC_Crab_DL_LOD0();
 
+
 //----- Prefab Names -----
 void SC_Prefabs_DrawCastles();
+*/
 
 void beach_scene_init() {
 
@@ -74,7 +78,7 @@ void update_beach_scene() {
 
 }
 
-extern GLuint playfield;
+
 
 void render_beach_scene() {
 

@@ -12,13 +12,44 @@
 
 /**/
 
+
+
+//----- Note ----- Menu Functions
+extern void SC_Playfield_Structure_Menu_Init();
+extern void SC_Playfield_Structure_Menu_Update();
+extern void SC_Playfield_Structure_Menu_Draw();
+
+extern void SC_Playfield_Pause_Menu_Draw();
+
+extern void SC_PlayfieldOpenMenu_EventListener(g64_EventArgs* tempArgs);
+extern void SC_PlayfieldOpenMenu_Update();
+
+extern void SC_NewGame_MenuEvent(char* keyWord);
+extern void SC_Instructions_MenuEvent(char* keyWord);
+
+extern g64_Menu_Collections MenuList_EditStructures;
+
+
+//----- Note ----- Title Screen Menu Functions
+extern void SC_Title_Menu_Init();
+extern void SC_Title_Menu_Handler(g64_Event* thisEvent, char name[16]);
+extern void SC_Title_Start_EventListener(g64_EventArgs* tempArgs);
+extern void SC_Title_Instructions_EventListener(g64_EventArgs* tempArgs);
+extern void SC_Title_Selection_Handler(g64_Event* thisEvent, char name[16]);
+
+extern void SC_Title_Screen_Update();
+extern void SC_Title_Menu_Draw();
+
+
+
+//----- Note ----- Playfield References
 extern playerState player;
-extern cityState city;
+extern cityState SC_CityStats;
 extern playfieldState S_PlayfieldState_Pending[16][7];
 extern playfieldState S_PlayfieldState_Current[16][7];
 extern Vector3 SCGet_Playfield_Tile_Position(int column, int row);
-extern bool SC_Set_PlayfieldTile(int column, int row, char update[12]);
-
+extern u8 SC_Set_PlayfieldTile(int column, int row, char update[12]);
+extern void SC_PauseEventHandler(g64_Event* thisEvent, char name[16]);
 
 extern enum g64_PlayfieldEventState playfieldEventState;
 extern enum g64_EditModeState editModeState;
@@ -39,10 +70,12 @@ enum g64_BuildingTypeState {
 
     NoBuildingType,
     SmallTower, LargeTower,
-    WatchTower, Lighthouse,
-    OfficeBuilding, Condomenium,
-    PowerPlant, Walls,
+    WatchTower,
     BuildingTypeSize
+    //WatchTower, Lighthouse,
+    //OfficeBuilding, Condomenium,
+    //PowerPlant, Walls,
+    
 
 };
 
@@ -52,8 +85,9 @@ enum g64_LandscapeTypeState {
 
     NoLandscape,
     Dirt,
-    Water,
     LandscapeTypeSize
+    //Water,
+    
 };
 
 
@@ -97,8 +131,10 @@ extern void SC_Playfield_Cursor_Draw();
 //extern g64_GameTimer PlayfieldObjectDelayTimer;
 
 
-extern g64_PlayfieldEvent BuildObjectEvent;
 
+extern g64_TimeEvent ErosionEvent;
+extern g64_TimeEvent JobsCheckEvent;
+extern g64_TimeEvent ResidentCheckEvent;
 extern g64_TimeEvent PropertyTaxEvent;
 extern g64_TimeEvent SalesTaxEvent;
 extern g64_GameTimer tempTimer;
@@ -106,10 +142,10 @@ extern g64_GameTimer tempTimer;
 extern g64_PlayfieldEvent PlayfieldEvent;
 extern g64_GameTimer PlayfieldDelay;
 
+extern g64_PlayfieldEvent BuildObjectEvent;
 extern g64_PlayfieldEvent BuildTypeChangeEvent;
-
 extern g64_PlayfieldEvent LandscapeEvent;
-
+extern g64_PlayfieldEvent BuildMenuEvent;
 
 extern void SC_Events_Init();
 extern void SC_Events_Update();
