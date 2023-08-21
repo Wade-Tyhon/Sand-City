@@ -7,3 +7,6 @@ filesystem/
 *.msym
 *.dfs
 *.elf
+*.wav
+*.mp3
+*.z64
